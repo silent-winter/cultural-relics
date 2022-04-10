@@ -45,16 +45,16 @@ public class ApiResult<T> {
     private T data;
 
 
-    public static <T> ApiResult success(T data) {
-        return new ApiResult(true, ApiResult.SUCCESS, SUCCESS_MESSAGE, data);
+    public static <T> ApiResult<T> success(T data) {
+        return new ApiResult<>(true, ApiResult.SUCCESS, SUCCESS_MESSAGE, data);
     }
 
-    public static <T> ApiResult fail() {
-        return new ApiResult(false, ApiResult.ERROR_SYSTEM, FAIL_MESSAGE, null);
+    public static <T> ApiResult<T> fail() {
+        return new ApiResult<>(false, ApiResult.ERROR_SYSTEM, FAIL_MESSAGE, null);
     }
 
-    public static <T> ApiResult fail(String msg) {
-        return new ApiResult(false, ApiResult.ERROR_SYSTEM, msg, null);
+    public static <T> ApiResult<T> fail(String msg) {
+        return new ApiResult<>(false, ApiResult.ERROR_SYSTEM, msg, null);
     }
 
 
