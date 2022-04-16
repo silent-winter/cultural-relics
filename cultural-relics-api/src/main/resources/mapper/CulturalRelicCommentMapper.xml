@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.buct.computer.mapper.CulturalRelicCommentMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.buct.computer.model.CulturalRelicComment">
+        <id column="id" property="id" />
+        <result column="content" property="content" />
+        <result column="like_num" property="likeNum" />
+        <result column="parent_comment_id" property="parentCommentId" />
+        <result column="cultural_relic_id" property="culturalRelicId" />
+        <result column="publish_user_id" property="publishUserId" />
+        <result column="publish_user_name" property="publishUserName" />
+        <result column="status" property="status" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, content, like_num, parent_comment_id, cultural_relic_id, publish_user_id, publish_user_name, status, update_time, create_time
+    </sql>
+
+</mapper>
