@@ -41,11 +41,10 @@ public class CulturalRelicInfo implements Serializable {
     private String name;
 
     /**
-     * 文物发现时间(年月日)
+     * 文物发现时间信息
      */
     @TableField("discover_time")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date discoverTime;
+    private String discoverTime;
 
     /**
      * 文物图片地址
