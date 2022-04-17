@@ -41,29 +41,29 @@ public class CulturalRelicInfo implements Serializable {
     private String name;
 
     /**
-     * 出土时间(年月日)
+     * 文物发现时间(年月日)
      */
-    @TableField("unearthed_time")
+    @TableField("discover_time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date unearthedTime;
+    private Date discoverTime;
 
     /**
      * 文物图片地址
      */
-    @TableField("image")
-    private String image;
+    @TableField("image_url")
+    private String imageUrl;
 
     /**
      * 文物材质
      */
-    @TableField("material")
-    private String material;
+    @TableField("medium")
+    private String medium;
 
     /**
      * 文物作者
      */
-    @TableField("author")
-    private String author;
+    @TableField("artist")
+    private String artist;
 
     /**
      * 文物在展情况(1:在展，0:下架)
@@ -78,10 +78,28 @@ public class CulturalRelicInfo implements Serializable {
     private String detail;
 
     /**
+     * 文物尺寸
+     */
+    @TableField("dimension")
+    private String dimension;
+
+    /**
      * 文物类别
      */
-    @TableField("type")
-    private String type;
+    @TableField("classification")
+    private String classification;
+
+    /**
+     * 详情页地址
+     */
+    @TableField("detail_url")
+    private String detailUrl;
+
+    /**
+     * 文物所在地址信息
+     */
+    @TableField("location")
+    private String location;
 
     /**
      * 记录创建时间

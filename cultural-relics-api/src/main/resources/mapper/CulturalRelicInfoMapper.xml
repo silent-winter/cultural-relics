@@ -6,20 +6,23 @@
     <resultMap id="BaseResultMap" type="com.buct.computer.model.CulturalRelicInfo">
         <id column="id" property="id" />
         <result column="name" property="name" />
-        <result column="unearthed_time" property="unearthedTime" />
-        <result column="image" property="image" />
-        <result column="material" property="material" />
-        <result column="author" property="author" />
+        <result column="discover_time" property="discoverTime" />
+        <result column="image_url" property="imageUrl" />
+        <result column="medium" property="medium" />
+        <result column="artist" property="artist" />
         <result column="status" property="status" />
         <result column="detail" property="detail" />
-        <result column="type" property="type" />
+        <result column="classification" property="classification" />
+        <result column="location" property="location" />
+        <result column="detail_url" property="detailUrl" />
+        <result column="dimension" property="dimension" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, unearthed_time, image, material, author, status, detail, type, create_time, update_time
+        id, name, discover_time, image_url, medium, artist, status, detail, classification, location, detail_url, dimension, create_time, update_time
     </sql>
 
 </mapper>
