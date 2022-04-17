@@ -30,8 +30,8 @@ public class CulturalRelicInfoControllerTest {
         for (int i = 0; i <= 100; i++) {
             CulturalRelicInfo relicInfo = CulturalRelicInfo.builder()
                     .name("name-" + i)
-                    .author("author-" + i)
-                    .unearthedTime(new Date())
+                    .artist("author-" + i)
+                    .discoverTime("time")
                     .detail("xxxxxxxxx")
                     .build();
             culturalRelicInfoList.add(relicInfo);

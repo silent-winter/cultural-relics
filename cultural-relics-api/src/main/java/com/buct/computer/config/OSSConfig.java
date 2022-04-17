@@ -2,7 +2,8 @@ package com.buct.computer.config;
 
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
-import org.springframework.beans.factory.annotation.Value;
+import com.buct.computer.config.properties.OSSProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,19 +15,12 @@ import org.springframework.context.annotation.Configuration;
  * @Date: 2022/04/16/12:03
  */
 @Configuration
+@EnableConfigurationProperties({OSSProperties.class})
 public class OSSConfig {
 
-    @Value("${aliyun.oss.file.endpoint}")
-    private String endpoint;
-    @Value("${aliyun.oss.file.accessKeyId}")
-    private String accessKeyId;
-    @Value("${aliyun.oss.file.accessKeySecret}")
-    private String accessKeySecret;
-
-
     @Bean
-    public OSS ossClient() {
-        return new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+    public OSS ossClient(OSSProperties ossProperties) {
+        return new OSSClientBuilder().build(ossProperties.getEndpoint(), ossProperties.getAccessKeyId(), ossProperties.getAccessKeySecret());
     }
 
 }

@@ -40,4 +40,9 @@ public class CulturalRelicInfoVO {
 
     private String photoUrl;
 
+    /**
+     * 图片名字，用于映射本地
+     */
+    private String imgName;
+
 }
