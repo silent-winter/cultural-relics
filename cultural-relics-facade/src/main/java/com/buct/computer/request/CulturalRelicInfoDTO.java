@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CulturalRelicInfoVO {
+public class CulturalRelicInfoDTO {
 
     private Long id;
 

@@ -69,6 +69,12 @@ public class CulturalRelicCommentServiceImpl extends ServiceImpl<CulturalRelicCo
     }
 
     @Override
+    public List<CulturalRelicComment> getAllSubCommentsByParentId(Long parentCommentId) {
+        return this.baseMapper.selectList(new LambdaQueryWrapper<CulturalRelicComment>()
+                .eq(CulturalRelicComment::getParentCommentId, parentCommentId));
+    }
+
+    @Override
     public List<CulturalRelicComment> getAllCommentsByCulturalRelicIdAndStatus(Long culturalRelicId, Integer status) {
         // 根据updateTime排序
         return this.baseMapper.selectList(new LambdaQueryWrapper<CulturalRelicComment>()

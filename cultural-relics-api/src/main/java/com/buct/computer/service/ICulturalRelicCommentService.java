@@ -1,6 +1,5 @@
 package com.buct.computer.service;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.buct.computer.model.CulturalRelicComment;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.buct.computer.response.vo.CulturalRelicCommentVO;
@@ -20,5 +19,7 @@ public interface ICulturalRelicCommentService extends IService<CulturalRelicComm
     List<CulturalRelicComment> getAllCommentsByCulturalRelicIdAndStatus(Long culturalRelicId, Integer status);
 
     List<CulturalRelicCommentVO> getPageCommentList(Long culturalRelicId, Integer page, Integer size);
+
+    List<CulturalRelicComment> getAllSubCommentsByParentId(Long parentCommentId);
 
 }

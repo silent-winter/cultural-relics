@@ -4,12 +4,11 @@ import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSException;
 import com.aliyun.oss.model.ObjectMetadata;
-import com.aliyun.oss.model.PutObjectResult;
 import com.buct.computer.common.assembler.CulturalRelicAssembler;
 import com.buct.computer.model.CulturalRelicInfo;
-import com.buct.computer.request.CulturalRelicInfoVO;
+import com.buct.computer.request.CulturalRelicInfoDTO;
 import com.buct.computer.response.ApiResult;
-import com.buct.computer.service.impl.CulturalRelicInfoServiceImpl;
+import com.buct.computer.service.ICulturalRelicInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,10 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,22 +42,18 @@ public class OSSController {
     @Autowired
     private OSS ossClient;
     @Autowired
-    private CulturalRelicInfoServiceImpl culturalRelicInfoService;
+    private ICulturalRelicInfoService culturalRelicInfoService;
 
 
     @PostMapping("/uploadAndSave")
     @Transactional
-    public ApiResult<List<CulturalRelicInfo>> uploadAndSave(@RequestBody List<CulturalRelicInfoVO> culturalRelicInfoVOList) {
+    public ApiResult<List<CulturalRelicInfo>> uploadAndSave(@RequestBody List<CulturalRelicInfoDTO> culturalRelicInfoVOList) {
         // 对象mapping
-        List<CulturalRelicInfo> culturalRelicInfos = culturalRelicInfoVOList.stream().map(e -> {
-            CulturalRelicInfo culturalRelicInfo = CulturalRelicAssembler.MAPPER.culturalRelicInfoVOToCulturalRelicInfo(e);
-            culturalRelicInfo.setStatus(1);
-            culturalRelicInfo.setImageUrl("https://cultural-relics.oss-cn-beijing.aliyuncs.com/pic" + e.getImgName());
-            return culturalRelicInfo;
-        }).collect(Collectors.toList());
+        List<CulturalRelicInfo> culturalRelicInfos = culturalRelicInfoVOList.stream()
+                .map(CulturalRelicAssembler.MAPPER::culturalRelicInfoDTOToCulturalRelicInfo).collect(Collectors.toList());
 
         try {
-            for (CulturalRelicInfoVO culturalRelicInfoVO : culturalRelicInfoVOList) {
+            for (CulturalRelicInfoDTO culturalRelicInfoVO : culturalRelicInfoVOList) {
                 String filePath = "E:\\img" + culturalRelicInfoVO.getImgName();
                 InputStream inputStream = new FileInputStream(filePath);
                 // 设置header

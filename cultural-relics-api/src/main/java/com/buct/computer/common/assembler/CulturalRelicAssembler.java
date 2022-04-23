@@ -1,7 +1,7 @@
 package com.buct.computer.common.assembler;
 
 import com.buct.computer.model.CulturalRelicInfo;
-import com.buct.computer.request.CulturalRelicInfoVO;
+import com.buct.computer.request.CulturalRelicInfoDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -28,7 +28,7 @@ public interface CulturalRelicAssembler {
     @Mapping(source = "time", target = "discoverTime")
     @Mapping(source = "details", target = "detail")
     @Mapping(target = "imageUrl", source = "imgName", qualifiedByName = "imageUrlConvert")
-    CulturalRelicInfo culturalRelicInfoVOToCulturalRelicInfo(CulturalRelicInfoVO culturalRelicInfoVO);
+    CulturalRelicInfo culturalRelicInfoDTOToCulturalRelicInfo(CulturalRelicInfoDTO culturalRelicInfoVO);
 
     @Named("imageUrlConvert")
     default String imageUrlConvert(String imgName) {
