@@ -1,6 +1,7 @@
 package com.buct.computer.controller;
 
 
+import com.buct.computer.model.CulturalRelicComment;
 import com.buct.computer.model.CulturalRelicInfo;
 import com.buct.computer.response.ApiResult;
 import com.buct.computer.response.vo.CulturalRelicCommentVO;
@@ -30,17 +31,30 @@ public class CulturalRelicCommentController {
     private ICulturalRelicCommentService culturalRelicCommentService;
 
 
-    @GetMapping("/{culturalRelicId}")
+    @GetMapping("/page")
     @ApiOperation("根据文物id查询所有评论得分页数据")
-    public ApiResult<List<CulturalRelicCommentVO>> getPageComments(@PathVariable("culturalRelicId") Long culturalRelicId,
+    public ApiResult<List<CulturalRelicCommentVO>> getPageComments(@RequestParam("culturalRelicId") Long culturalRelicId,
                                      @RequestParam(value = "page", required = false) Integer page,
                                      @RequestParam(value = "size", required = false) Integer size) {
-//        CulturalRelicInfo culturalRelicInfo = culturalRelicInfoService.getById(culturalRelicId);
-//        if (culturalRelicInfo == null) {
-//            return ApiResult.fail(ApiResult.ENTITY_ABSENT, ApiResult.ENTITY_ABSENT_MSG);
-//        }
+        CulturalRelicInfo culturalRelicInfo = culturalRelicInfoService.getById(culturalRelicId);
+        if (culturalRelicInfo == null) {
+            return ApiResult.fail(ApiResult.ENTITY_ABSENT, ApiResult.ENTITY_ABSENT_MSG);
+        }
         List<CulturalRelicCommentVO> commentList = culturalRelicCommentService.getPageCommentList(culturalRelicId, page, size);
         return ApiResult.success(commentList);
+    }
+
+
+    @PostMapping("/like/{id}")
+    @ApiOperation("评论点赞")
+    public ApiResult<CulturalRelicComment> doLike(@PathVariable("id") Long commentId) {
+        CulturalRelicComment comment = culturalRelicCommentService.getById(commentId);
+        if (comment == null) {
+            return ApiResult.fail(ApiResult.ENTITY_ABSENT, ApiResult.ENTITY_ABSENT_MSG);
+        }
+        comment.setLikeNum(comment.getLikeNum() + 1);
+        culturalRelicCommentService.updateById(comment);
+        return ApiResult.success(comment);
     }
 
 }
