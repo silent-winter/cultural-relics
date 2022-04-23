@@ -42,7 +42,8 @@ public class MybatisPlusConfig {
 
             @Override
             public void updateFill(MetaObject metaObject) {
-                this.strictUpdateFill(metaObject, "updateTime", Date.class, new Date());
+                // this.strictUpdateFill(metaObject, "updateTime", Date.class, new Date());
+                this.setFieldValByName("updateTime", new Date(), metaObject);
             }
         };
     }
