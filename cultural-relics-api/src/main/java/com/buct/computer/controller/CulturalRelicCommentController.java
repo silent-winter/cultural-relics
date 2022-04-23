@@ -1,9 +1,16 @@
 package com.buct.computer.controller;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.buct.computer.model.CulturalRelicInfo;
+import com.buct.computer.response.ApiResult;
+import com.buct.computer.response.vo.CulturalRelicCommentVO;
+import com.buct.computer.service.ICulturalRelicCommentService;
+import com.buct.computer.service.ICulturalRelicInfoService;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
 /**
  * <p>
@@ -16,5 +23,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/comment")
 public class CulturalRelicCommentController {
+
+    @Autowired
+    private ICulturalRelicInfoService culturalRelicInfoService;
+    @Autowired
+    private ICulturalRelicCommentService culturalRelicCommentService;
+
+
+    @GetMapping("/{culturalRelicId}")
+    @ApiOperation("根据文物id查询所有评论得分页数据")
+    public ApiResult<List<CulturalRelicCommentVO>> getPageComments(@PathVariable("culturalRelicId") Long culturalRelicId,
+                                     @RequestParam(value = "page", required = false) Integer page,
+                                     @RequestParam(value = "size", required = false) Integer size) {
+//        CulturalRelicInfo culturalRelicInfo = culturalRelicInfoService.getById(culturalRelicId);
+//        if (culturalRelicInfo == null) {
+//            return ApiResult.fail(ApiResult.ENTITY_ABSENT, ApiResult.ENTITY_ABSENT_MSG);
+//        }
+        List<CulturalRelicCommentVO> commentList = culturalRelicCommentService.getPageCommentList(culturalRelicId, page, size);
+        return ApiResult.success(commentList);
+    }
 
 }

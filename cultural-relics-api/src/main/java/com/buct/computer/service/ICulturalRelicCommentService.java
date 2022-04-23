@@ -1,7 +1,11 @@
 package com.buct.computer.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.buct.computer.model.CulturalRelicComment;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.buct.computer.response.vo.CulturalRelicCommentVO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +16,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2022-04-16
  */
 public interface ICulturalRelicCommentService extends IService<CulturalRelicComment> {
+
+    List<CulturalRelicComment> getAllCommentsByCulturalRelicIdAndStatus(Long culturalRelicId, Integer status);
+
+    List<CulturalRelicCommentVO> getPageCommentList(Long culturalRelicId, Integer page, Integer size);
 
 }

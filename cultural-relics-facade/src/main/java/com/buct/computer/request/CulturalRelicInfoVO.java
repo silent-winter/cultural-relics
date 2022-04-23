@@ -1,5 +1,6 @@
 package com.buct.computer.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,8 +37,10 @@ public class CulturalRelicInfoVO {
 
     private String details;
 
+    @JsonProperty("detail_url")
     private String detailUrl;
 
+    @JsonProperty("phone_url")
     private String photoUrl;
 
     /**
