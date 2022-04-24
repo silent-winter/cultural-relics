@@ -2,11 +2,13 @@ package com.buct.computer.controller;
 
 
 import com.buct.computer.common.assembler.CulturalRelicCommentAssembler;
+import com.buct.computer.model.CommentLikeLog;
 import com.buct.computer.model.CulturalRelicComment;
 import com.buct.computer.model.CulturalRelicInfo;
 import com.buct.computer.request.CulturalRelicCommentDTO;
 import com.buct.computer.response.ApiResult;
 import com.buct.computer.response.vo.CulturalRelicCommentVO;
+import com.buct.computer.service.ICommentLikeLogService;
 import com.buct.computer.service.ICulturalRelicCommentService;
 import com.buct.computer.service.ICulturalRelicInfoService;
 import io.swagger.annotations.Api;
@@ -37,6 +39,8 @@ public class CulturalRelicCommentController {
     private ICulturalRelicInfoService culturalRelicInfoService;
     @Autowired
     private ICulturalRelicCommentService culturalRelicCommentService;
+    @Autowired
+    private ICommentLikeLogService commentLikeLogService;
 
 
     @GetMapping("/page")
@@ -67,6 +71,14 @@ public class CulturalRelicCommentController {
         }
         comment.setLikeNum(comment.getLikeNum() + 1);
         culturalRelicCommentService.updateById(comment);
+        // 保存点赞记录
+        CommentLikeLog commentLikeLog = CommentLikeLog.builder()
+                .commentId(commentId)
+                .likeUserId(1)
+                .likeUserName("xxx")
+                .noticeFlag(true)
+                .build();
+        commentLikeLogService.save(commentLikeLog);
         return ApiResult.success(comment);
     }
 
