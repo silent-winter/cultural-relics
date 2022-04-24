@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.buct.computer.model.CulturalRelicInfo;
 import com.buct.computer.response.ApiResult;
 import com.buct.computer.service.ICulturalRelicInfoService;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/basic")
 @Slf4j
+@Api(tags = "文物信息相关接口")
 public class CulturalRelicInfoController {
 
     @Autowired

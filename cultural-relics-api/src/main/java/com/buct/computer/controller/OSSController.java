@@ -9,6 +9,7 @@ import com.buct.computer.model.CulturalRelicInfo;
 import com.buct.computer.request.CulturalRelicInfoDTO;
 import com.buct.computer.response.ApiResult;
 import com.buct.computer.service.ICulturalRelicInfoService;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +35,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/oss")
 @Slf4j
+@Api(tags = "oss文件上传接口")
 public class OSSController {
 
     @Value("${aliyun.oss.file.bucketName}")

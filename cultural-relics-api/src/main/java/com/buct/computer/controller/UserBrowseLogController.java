@@ -1,6 +1,7 @@
 package com.buct.computer.controller;
 
 
+import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/browse")
+@Api(tags = "用户浏览历史相关接口")
 public class UserBrowseLogController {
 
 }

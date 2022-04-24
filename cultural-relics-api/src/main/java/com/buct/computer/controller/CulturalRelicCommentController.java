@@ -9,6 +9,9 @@ import com.buct.computer.response.ApiResult;
 import com.buct.computer.response.vo.CulturalRelicCommentVO;
 import com.buct.computer.service.ICulturalRelicCommentService;
 import com.buct.computer.service.ICulturalRelicInfoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +30,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/comment")
+@Api(tags = "用户评论相关接口")
 public class CulturalRelicCommentController {
 
     @Autowired
@@ -37,6 +41,11 @@ public class CulturalRelicCommentController {
 
     @GetMapping("/page")
     @ApiOperation("根据文物id查询所有评论得分页数据")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "culturalRelicId", value = "文物id", defaultValue = "1" ,required = true),
+            @ApiImplicitParam(name = "page", value = "当前页码", defaultValue = "1"),
+            @ApiImplicitParam(name = "size", value = "每页记录数", defaultValue = "10")
+    })
     public ApiResult<List<CulturalRelicCommentVO>> getPageComments(@RequestParam("culturalRelicId") Long culturalRelicId,
                                      @RequestParam(value = "page", required = false) Integer page,
                                      @RequestParam(value = "size", required = false) Integer size) {

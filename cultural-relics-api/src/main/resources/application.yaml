@@ -13,7 +13,7 @@ spring:
 server:
   port: 8000
   servlet:
-    context-path: /cutural-relic
+    context-path: /cultural-relic
 
 mybatis-plus:
   # mapper文件位置
