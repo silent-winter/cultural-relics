@@ -17,4 +17,11 @@
         id, user_id, cultural_relic_id, browse_time, create_time, update_time
     </sql>
 
+    <select id="selectLast3DaysBrowseLogByUserId" resultType="com.buct.computer.model.UserBrowseLog">
+        select <include refid="Base_Column_List"/> from user_browse_log
+        <where>
+            browse_time &gt;= now() - interval 3 day
+        </where>
+    </select>
+
 </mapper>

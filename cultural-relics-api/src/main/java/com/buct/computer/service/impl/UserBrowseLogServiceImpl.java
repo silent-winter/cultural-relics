@@ -4,7 +4,12 @@ import com.buct.computer.model.UserBrowseLog;
 import com.buct.computer.mapper.UserBrowseLogMapper;
 import com.buct.computer.service.IUserBrowseLogService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -17,4 +22,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserBrowseLogServiceImpl extends ServiceImpl<UserBrowseLogMapper, UserBrowseLog> implements IUserBrowseLogService {
 
+    @Autowired
+    private UserBrowseLogMapper userBrowseLogMapper;
+
+
+    @Override
+    public Set<Long> getLast3DaysBrowseLog(Integer userId) {
+        List<UserBrowseLog> userInfoList = userBrowseLogMapper.selectLast3DaysBrowseLogByUserId(userId);
+        return userInfoList.stream().map(UserBrowseLog::getCulturalRelicId).collect(Collectors.toSet());
+    }
 }

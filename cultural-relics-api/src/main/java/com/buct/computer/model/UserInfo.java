@@ -75,6 +75,12 @@ public class UserInfo implements Serializable {
     private String type;
 
     /**
+     * 用户收藏的文物id集合
+     */
+    @TableField("collection")
+    private String collection;
+
+    /**
      * 是否可用
      */
     @TableField("status")

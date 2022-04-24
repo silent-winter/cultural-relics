@@ -21,21 +21,19 @@ public interface CulturalRelicAssembler {
     CulturalRelicAssembler MAPPER = Mappers.getMapper(CulturalRelicAssembler.class);
 
 
-    @Mapping(target = "status", source = "location", qualifiedByName = "getStatusFromLocation")
+    @Mapping(target = "status", expression = "java(getStatusFromLocation(culturalRelicInfoVO.getLocation()))")
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "updateTime", ignore = true)
     @Mapping(target = "createTime", ignore = true)
     @Mapping(source = "time", target = "discoverTime")
     @Mapping(source = "details", target = "detail")
-    @Mapping(target = "imageUrl", source = "imgName", qualifiedByName = "imageUrlConvert")
+    @Mapping(target = "imageUrl", expression = "java(imageUrlConvert(culturalRelicInfoVO.getImgName()))")
     CulturalRelicInfo culturalRelicInfoDTOToCulturalRelicInfo(CulturalRelicInfoDTO culturalRelicInfoVO);
 
-    @Named("imageUrlConvert")
     default String imageUrlConvert(String imgName) {
         return "https://cultural-relics.oss-cn-beijing.aliyuncs.com/pic/" + imgName;
     }
 
-    @Named("getStatusFromLocation")
     default Integer getStatusFromLocation(String location) {
         location = location.replace("\n|\r", StringUtils.EMPTY).trim();
         if (StringUtils.startsWithAny(location, "on view", "On view")) {

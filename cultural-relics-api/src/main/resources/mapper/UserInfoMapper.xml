@@ -12,6 +12,7 @@
         <result column="phone" property="phone" />
         <result column="email" property="email" />
         <result column="type" property="type" />
+        <result column="collection" property="collection" />
         <result column="status" property="status" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
@@ -19,7 +20,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, user_name, password, profile_picture, signature, phone, email, type, status, create_time, update_time
+        id, user_name, password, profile_picture, signature, phone, email, type, collection, status, create_time, update_time
     </sql>
 
 </mapper>
