@@ -1,6 +1,8 @@
 package com.buct.computer.controller;
 
 
+import cn.dev33.satoken.stp.StpUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.buct.computer.common.assembler.UserInfoAssembler;
 import com.buct.computer.model.UserInfo;
 import com.buct.computer.response.ApiResult;
@@ -10,11 +12,8 @@ import com.buct.computer.service.IUserInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -45,6 +44,31 @@ public class UserInfoController {
         UserInfoDetailVO userInfoDetailVO = UserInfoAssembler.MAPPER.userInfoToUserInfoDetailVO(userInfo);
         userInfoDetailVO.setBrowseIds(userBrowseLogService.getLast3DaysBrowseLog(userId));
         return ApiResult.success(userInfoDetailVO);
+    }
+
+    @PostMapping("/register")
+    public ApiResult<String> register(@RequestBody UserInfo userInfo) {
+        if(userInfoService.getOne(new QueryWrapper<UserInfo>().eq("user_name", userInfo.getUserName())) != null) {
+            return ApiResult.fail("fail to register: the username has existed");
+        }
+        userInfoService.save(userInfo);
+        return ApiResult.success("register successfully");
+    }
+
+    @PostMapping("/login")
+    public ApiResult<String> login(@RequestBody UserInfo userInfo) {
+        UserInfo savedAccount = userInfoService.getOne(new QueryWrapper<UserInfo>().eq("user_name", userInfo.getUserName()).eq("password", userInfo.getPassword()));
+        if (savedAccount == null) {
+            return ApiResult.fail("login successfully");
+        }
+        StpUtil.login(savedAccount.getId());
+        return ApiResult.success(null);
+    }
+
+    @GetMapping("/logout")
+    public ApiResult<String> logout() {
+        StpUtil.logout();
+        return ApiResult.success("logout successfully");
     }
 
 }
