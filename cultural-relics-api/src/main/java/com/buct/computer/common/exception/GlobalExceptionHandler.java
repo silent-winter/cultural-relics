@@ -1,5 +1,7 @@
 package com.buct.computer.common.exception;
 
+import cn.dev33.satoken.exception.NotLoginException;
+import cn.dev33.satoken.exception.NotRoleException;
 import com.buct.computer.response.ApiResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,6 +28,18 @@ public class GlobalExceptionHandler {
     public ApiResult<String> handleException(Exception e){
         log.warn("handleException detected!", e);
         return ApiResult.fail(ApiResult.ERROR_SYSTEM, ApiResult.ERROR_SYSTEM_MSG);
+    }
+
+    @ExceptionHandler(NotLoginException.class)
+    public ApiResult<String> handleNotLoginException(NotLoginException e){
+        log.warn("handleNotLoginException detected!", e);
+        return ApiResult.fail("401", "please login first");
+    }
+
+    @ExceptionHandler(NotRoleException.class)
+    public ApiResult<String> handleNotRoleException(NotRoleException e){
+        log.warn("handleNotRoleException detected!", e);
+        return ApiResult.fail("401", "only admin can access");
     }
 
 }
