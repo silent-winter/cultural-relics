@@ -4,6 +4,7 @@
 
     <property name="pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg %n"/>
     <property name="pattern-color" value="%yellow(%d{yyyy-MM-dd HH:mm:ss.SSS}) [%thread] %highlight(%-5level) %green(%logger{50}) - %highlight(%msg) %n"/>
+    <property name="LOG_HOME" value="/root/log" />
 
     <!-- 控制台输出 -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -20,21 +21,22 @@
     </appender>
 
     <!-- 文件输出 -->
-<!--    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
-<!--        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
-<!--            &lt;!&ndash; 日志保存7天 &ndash;&gt;-->
-<!--            <maxHistory>7</maxHistory>-->
-<!--            <fileNamePattern>${LOG_HOME}/bs-dmm-system.%d{yyyy-MM-dd}.%i.log</fileNamePattern>-->
-<!--            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">-->
-<!--                <maxFileSize>100MB</maxFileSize>-->
-<!--            </timeBasedFileNamingAndTriggeringPolicy>-->
-<!--        </rollingPolicy>-->
-<!--        <encoder>-->
-<!--            <pattern>${pattern}</pattern>-->
-<!--        </encoder>-->
-<!--    </appender>-->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 日志保存7天 -->
+            <maxHistory>7</maxHistory>
+            <fileNamePattern>${LOG_HOME}/cultural-relics.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${pattern}</pattern>
+        </encoder>
+    </appender>
 
     <root level="INFO">
+        <appender-ref ref="FILE" />
         <appender-ref ref="CONSOLE-WITH-COLOR"/>
     </root>
 </configuration>
