@@ -17,6 +17,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 
 /**
@@ -52,7 +53,7 @@ public class UserInfoController {
 
 
     @PatchMapping("/info")
-    @ApiOperation("更新登录态用户信息(传id无效)")
+    @ApiOperation("更新登录态用户信息")
     public ApiResult<String> updateUserInfo(@RequestBody UserInfo userInfo) {
         userInfo.setId(StpUtil.getLoginId(0));
         if (userInfoService.updateById(userInfo)) {
@@ -65,7 +66,6 @@ public class UserInfoController {
     @ApiOperation("新用户注册")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userName", value = "用户名" ,required = true),
-            @ApiImplicitParam(name = "password", value = "密码" ,required = true),
     })
     public ApiResult<String> register(@RequestBody UserInfo userInfo) {
         if(userInfoService.getOne(new QueryWrapper<UserInfo>().eq("user_name", userInfo.getUserName())) != null) {
@@ -84,22 +84,22 @@ public class UserInfoController {
     @PostMapping("/login")
     @ApiOperation("登录")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userName", value = "用户名" ,required = true),
-            @ApiImplicitParam(name = "password", value = "密码" ,required = true),
+            @ApiImplicitParam(name = "userName", value = "用户名" ,required = true, paramType = "body"),
+            @ApiImplicitParam(name = "password", value = "密码" ,required = true, paramType = "body"),
     })
-    public ApiResult<String> login(@RequestBody UserInfo userInfo) {
+    public ApiResult<String> login(@ApiIgnore @RequestBody UserInfo userInfo) {
         UserInfo savedAccount = userInfoService.getOne(new QueryWrapper<UserInfo>()
                 .eq("user_name", userInfo.getUserName())
                 .eq("password", userInfo.getPassword()));
         if (savedAccount == null) {
-            return ApiResult.fail("login successfully");
+            return ApiResult.fail("the user hasn't registered");
         }
         StpUtil.login(savedAccount.getId());
-        return ApiResult.success(null);
+        return ApiResult.success("login successfully");
     }
 
     @GetMapping("/logout")
-    @ApiOperation("注销")
+    @ApiOperation("注销当前登录用户")
     public ApiResult<String> logout() {
         StpUtil.logout();
         return ApiResult.success("logout successfully");

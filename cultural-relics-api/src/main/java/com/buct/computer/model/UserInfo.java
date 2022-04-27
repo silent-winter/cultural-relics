@@ -6,6 +6,7 @@ import java.util.Date;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 /**
@@ -29,6 +30,7 @@ public class UserInfo implements Serializable {
     /**
      * 主键id
      */
+    @ApiModelProperty(hidden = true)
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
