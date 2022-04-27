@@ -3,6 +3,7 @@ package com.buct.computer.config;
 import cn.dev33.satoken.interceptor.SaRouteInterceptor;
 import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
+import com.buct.computer.common.enums.UserTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -50,10 +51,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 }
             });
             //SaRouter.match("/**", () -> SaRouter.stop());  // 为了方便测试可以暂时设置为全部放行
-            SaRouter.match("/", "/error", "/csrf", "/swagger-resources/**", "/**/swagger-ui.html").check(() -> SaRouter.stop());  // swagger放行路由
-            SaRouter.match("/user/register", () -> SaRouter.stop());
-            SaRouter.match("/**", "/user/login", () -> StpUtil.checkLogin());
-            SaRouter.match("/admin/**", () -> StpUtil.checkRole("admin"));
+            SaRouter.match("/", "/error", "/csrf", "/swagger-resources/**", "/**/swagger-ui.html", "/webjars/**").check(SaRouter::stop);  // swagger放行路由
+            SaRouter.match("/user/register", SaRouter::stop);
+            SaRouter.match("/**", "/user/login", StpUtil::checkLogin);
+            SaRouter.match("/admin/**", () -> StpUtil.checkRole(UserTypeEnum.admin.getTypeName()));
         }));
     }
 }
