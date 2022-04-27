@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.Objects;
+
 
 /**
  * <p>
@@ -40,8 +42,12 @@ public class UserInfoController {
 
 
     @GetMapping("/info")
-    @ApiImplicitParam(name = "userId", value = "用户id", defaultValue = "1" , required = true)
-    public ApiResult<UserInfoDetailVO> getUserInfo(@RequestParam("userId") Integer userId) {
+    @ApiImplicitParam(name = "userId", value = "用户id")
+    public ApiResult<UserInfoDetailVO> getUserInfo(@RequestParam(value = "userId", required = false) Integer userId) {
+        if (Objects.isNull(userId)) {
+            // userId为空，默认查询当前登录用户的信息
+            userId = StpUtil.getLoginIdAsInt();
+        }
         UserInfo userInfo = userInfoService.getById(userId);
         if (userInfo == null) {
             return ApiResult.fail(ApiResult.ENTITY_ABSENT, ApiResult.ENTITY_ABSENT_MSG);
