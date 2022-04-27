@@ -4,6 +4,7 @@ package com.buct.computer.controller;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.buct.computer.common.assembler.UserInfoAssembler;
+import com.buct.computer.common.enums.UserTypeEnum;
 import com.buct.computer.model.UserInfo;
 import com.buct.computer.response.ApiResult;
 import com.buct.computer.response.vo.UserInfoDetailVO;
@@ -71,7 +72,7 @@ public class UserInfoController {
             return ApiResult.fail("fail to register: the username has existed");
         }
         if (StringUtils.isBlank(userInfo.getType())) {
-            userInfo.setType("user");
+            userInfo.setType(UserTypeEnum.ordinary.getTypeName());
         }
         if (userInfo.getStatus() == null) {
             userInfo.setStatus(1);
@@ -87,7 +88,9 @@ public class UserInfoController {
             @ApiImplicitParam(name = "password", value = "密码" ,required = true),
     })
     public ApiResult<String> login(@RequestBody UserInfo userInfo) {
-        UserInfo savedAccount = userInfoService.getOne(new QueryWrapper<UserInfo>().eq("user_name", userInfo.getUserName()).eq("password", userInfo.getPassword()));
+        UserInfo savedAccount = userInfoService.getOne(new QueryWrapper<UserInfo>()
+                .eq("user_name", userInfo.getUserName())
+                .eq("password", userInfo.getPassword()));
         if (savedAccount == null) {
             return ApiResult.fail("login successfully");
         }

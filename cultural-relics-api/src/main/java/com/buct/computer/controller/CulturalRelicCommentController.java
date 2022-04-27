@@ -1,16 +1,19 @@
 package com.buct.computer.controller;
 
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.buct.computer.common.assembler.CulturalRelicCommentAssembler;
 import com.buct.computer.model.CommentLikeLog;
 import com.buct.computer.model.CulturalRelicComment;
 import com.buct.computer.model.CulturalRelicInfo;
+import com.buct.computer.model.UserInfo;
 import com.buct.computer.request.CulturalRelicCommentDTO;
 import com.buct.computer.response.ApiResult;
 import com.buct.computer.response.vo.CulturalRelicCommentVO;
 import com.buct.computer.service.ICommentLikeLogService;
 import com.buct.computer.service.ICulturalRelicCommentService;
 import com.buct.computer.service.ICulturalRelicInfoService;
+import com.buct.computer.service.IUserInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -41,6 +44,8 @@ public class CulturalRelicCommentController {
     private ICulturalRelicCommentService culturalRelicCommentService;
     @Autowired
     private ICommentLikeLogService commentLikeLogService;
+    @Autowired
+    private IUserInfoService userInfoService;
 
 
     @GetMapping("/page")
@@ -65,6 +70,11 @@ public class CulturalRelicCommentController {
     @PostMapping("/like/{id}")
     @ApiOperation("评论点赞")
     public ApiResult<CulturalRelicComment> doLike(@PathVariable("id") Long commentId) {
+        int loginUserId = StpUtil.getLoginIdAsInt();
+        UserInfo user = userInfoService.getById(loginUserId);
+        if (user == null) {
+            return ApiResult.fail(ApiResult.ENTITY_ABSENT, ApiResult.ENTITY_ABSENT_MSG);
+        }
         CulturalRelicComment comment = culturalRelicCommentService.getById(commentId);
         if (comment == null) {
             return ApiResult.fail(ApiResult.ENTITY_ABSENT, ApiResult.ENTITY_ABSENT_MSG);
@@ -74,8 +84,8 @@ public class CulturalRelicCommentController {
         // 保存点赞记录
         CommentLikeLog commentLikeLog = CommentLikeLog.builder()
                 .commentId(commentId)
-                .likeUserId(1)
-                .likeUserName("xxx")
+                .likeUserId(loginUserId)
+                .likeUserName(user.getUserName())
                 .noticeFlag(true)
                 .build();
         commentLikeLogService.save(commentLikeLog);
