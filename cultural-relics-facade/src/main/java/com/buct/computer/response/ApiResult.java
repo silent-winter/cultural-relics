@@ -61,7 +61,7 @@ public class ApiResult<T> {
     }
 
     public static <T> ApiResult<T> fail() {
-        return new ApiResult<>(false, ApiResult.ERROR_SYSTEM, SUCCESS_MSG, null);
+        return new ApiResult<>(false, ApiResult.ERROR_SYSTEM, ERROR_SYSTEM_MSG, null);
     }
 
     public static <T> ApiResult<T> fail(String msg) {

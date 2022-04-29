@@ -53,17 +53,16 @@ public class OSSController {
         // 对象mapping
         List<CulturalRelicInfo> culturalRelicInfos = culturalRelicInfoVOList.stream()
                 .map(CulturalRelicAssembler.MAPPER::culturalRelicInfoDTOToCulturalRelicInfo).collect(Collectors.toList());
-
         try {
-            for (CulturalRelicInfoDTO culturalRelicInfoVO : culturalRelicInfoVOList) {
-                String filePath = "E:\\img" + culturalRelicInfoVO.getImgName();
-                InputStream inputStream = new FileInputStream(filePath);
+            for (CulturalRelicInfoDTO culturalRelicInfoDTO : culturalRelicInfoVOList) {
+                String imgName = culturalRelicInfoDTO.getImgName();
+                InputStream inputStream = new FileInputStream("E:\\img\\" + imgName);
                 // 设置header
                 ObjectMetadata objectMetadata = new ObjectMetadata();
                 objectMetadata.setContentType("image/jpg");
                 objectMetadata.setContentDisposition("inline");
                 // 创建PutObject请求。
-                ossClient.putObject(bucketName, "pic/" + filePath, inputStream, objectMetadata);
+                ossClient.putObject(bucketName, "pic/" + imgName, inputStream, objectMetadata);
             }
             culturalRelicInfoService.saveBatch(culturalRelicInfos);
             return ApiResult.success(culturalRelicInfos);

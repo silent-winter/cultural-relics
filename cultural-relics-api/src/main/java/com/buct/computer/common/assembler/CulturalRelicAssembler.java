@@ -21,15 +21,16 @@ public interface CulturalRelicAssembler {
     CulturalRelicAssembler MAPPER = Mappers.getMapper(CulturalRelicAssembler.class);
 
 
-    @Mapping(target = "status", expression = "java(getStatusFromLocation(culturalRelicInfoVO.getLocation()))")
+    @Mapping(target = "status", expression = "java(getStatusFromLocation(culturalRelicInfoDTO.getLocation()))")
+    @Mapping(target = "imageUrl", source = "imgName", qualifiedByName = "imageUrlConvert")
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "updateTime", ignore = true)
     @Mapping(target = "createTime", ignore = true)
     @Mapping(source = "time", target = "discoverTime")
     @Mapping(source = "details", target = "detail")
-    @Mapping(target = "imageUrl", expression = "java(imageUrlConvert(culturalRelicInfoVO.getImgName()))")
-    CulturalRelicInfo culturalRelicInfoDTOToCulturalRelicInfo(CulturalRelicInfoDTO culturalRelicInfoVO);
+    CulturalRelicInfo culturalRelicInfoDTOToCulturalRelicInfo(CulturalRelicInfoDTO culturalRelicInfoDTO);
 
+    @Named("imageUrlConvert")
     default String imageUrlConvert(String imgName) {
         return "https://cultural-relics.oss-cn-beijing.aliyuncs.com/pic/" + imgName;
     }

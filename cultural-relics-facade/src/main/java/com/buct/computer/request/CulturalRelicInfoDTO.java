@@ -40,12 +40,13 @@ public class CulturalRelicInfoDTO {
     @JsonProperty("detail_url")
     private String detailUrl;
 
-    @JsonProperty("phone_url")
+    @JsonProperty("photo_url")
     private String photoUrl;
 
     /**
      * 图片名字，用于映射本地
      */
+    @JsonProperty("photo_name")
     private String imgName;
 
 }
