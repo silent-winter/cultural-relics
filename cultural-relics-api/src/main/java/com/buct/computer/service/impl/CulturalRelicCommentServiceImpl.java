@@ -95,7 +95,7 @@ public class CulturalRelicCommentServiceImpl extends ServiceImpl<CulturalRelicCo
         comment.setLikeNum(isLike ? likeNum + 1 : likeNum - 1);
         this.updateById(comment);
         // 保存点赞记录
-        UserInfo user = userInfoService.getById(1);
+        UserInfo user = userInfoService.getById(StpUtil.getLoginId(0));
         Asserts.notNull(user, "当前用户未登录");
         CommentLikeLog commentLikeLog = CommentLikeLog.builder()
                 .commentId(comment.getId())

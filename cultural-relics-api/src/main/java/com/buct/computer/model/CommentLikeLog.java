@@ -39,7 +39,7 @@ public class CommentLikeLog implements Serializable {
     private Long commentId;
 
     /**
-     * 用户id
+     * 被点赞者id
      */
     @TableField("user_id")
     private Integer userId;
