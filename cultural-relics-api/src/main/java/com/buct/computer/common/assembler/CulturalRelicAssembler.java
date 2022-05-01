@@ -34,7 +34,8 @@ public interface CulturalRelicAssembler {
 
     @Named("imageUrlConvert")
     default String imageUrlConvert(String imgName) {
-        return "https://cultural-relics.oss-cn-beijing.aliyuncs.com/pic/" + imgName;
+        imgName = imgName.replaceAll("%", "%25");
+        return "https://cultural-relics.oss-cn-beijing.aliyuncs.com/pic24/" + imgName;
     }
 
     @Named("getMuseumFromLocation")
