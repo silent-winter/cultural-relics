@@ -1,6 +1,7 @@
 package com.buct.computer.controller;
 
 
+import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.buct.computer.common.assembler.UserInfoAssembler;
@@ -87,7 +88,7 @@ public class UserInfoController {
 
     @PostMapping("/login")
     @ApiOperation("登录")
-    public ApiResult<String> login(@RequestBody UserLoginDTO userLoginDTO) {
+    public ApiResult<SaTokenInfo> login(@RequestBody UserLoginDTO userLoginDTO) {
         checkUserParam(userLoginDTO.getUserName(), userLoginDTO.getPassword());
         UserInfo savedAccount = userInfoService.getOne(new QueryWrapper<UserInfo>()
                 .eq("user_name", userLoginDTO.getUserName())
@@ -96,7 +97,7 @@ public class UserInfoController {
             return ApiResult.fail("the user hasn't registered");
         }
         StpUtil.login(savedAccount.getId());
-        return ApiResult.success("login successfully");
+        return ApiResult.success(StpUtil.getTokenInfo());
     }
 
     @GetMapping("/logout")
