@@ -22,4 +22,6 @@ public interface ICulturalRelicCommentService extends IService<CulturalRelicComm
 
     List<CulturalRelicComment> getAllSubCommentsByParentId(Long parentCommentId);
 
+    CulturalRelicComment likeOrUnlike(CulturalRelicComment comment, boolean isLike);
+
 }

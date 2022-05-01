@@ -1,16 +1,24 @@
 package com.buct.computer.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.buct.computer.common.assembler.CulturalRelicCommentAssembler;
 import com.buct.computer.common.exception.InvalidParamException;
+import com.buct.computer.model.CommentLikeLog;
 import com.buct.computer.model.CulturalRelicComment;
 import com.buct.computer.mapper.CulturalRelicCommentMapper;
+import com.buct.computer.model.UserInfo;
 import com.buct.computer.response.ApiResult;
 import com.buct.computer.response.vo.CulturalRelicCommentVO;
+import com.buct.computer.service.ICommentLikeLogService;
 import com.buct.computer.service.ICulturalRelicCommentService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.buct.computer.service.IUserInfoService;
+import org.apache.http.util.Asserts;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.function.Function;
@@ -27,6 +35,12 @@ import java.util.stream.Collectors;
 @Service
 public class CulturalRelicCommentServiceImpl extends ServiceImpl<CulturalRelicCommentMapper, CulturalRelicComment>
         implements ICulturalRelicCommentService {
+
+    @Autowired
+    private ICommentLikeLogService commentLikeLogService;
+    @Autowired
+    private IUserInfoService userInfoService;
+
 
     @Override
     public List<CulturalRelicCommentVO> getPageCommentList(Long culturalRelicId, Integer page, Integer size) {
@@ -72,6 +86,26 @@ public class CulturalRelicCommentServiceImpl extends ServiceImpl<CulturalRelicCo
     public List<CulturalRelicComment> getAllSubCommentsByParentId(Long parentCommentId) {
         return this.baseMapper.selectList(new LambdaQueryWrapper<CulturalRelicComment>()
                 .eq(CulturalRelicComment::getParentCommentId, parentCommentId));
+    }
+
+    @Override
+    @Transactional
+    public CulturalRelicComment likeOrUnlike(CulturalRelicComment comment, boolean isLike) {
+        Integer likeNum = comment.getLikeNum();
+        comment.setLikeNum(isLike ? likeNum + 1 : likeNum - 1);
+        this.updateById(comment);
+        // 保存点赞记录
+        UserInfo user = userInfoService.getById(1);
+        Asserts.notNull(user, "当前用户未登录");
+        CommentLikeLog commentLikeLog = CommentLikeLog.builder()
+                .commentId(comment.getId())
+                .userId(comment.getPublishUserId())
+                .likeUserId(user.getId())
+                .likeUserName(user.getUserName())
+                .noticeFlag(true)
+                .build();
+        commentLikeLogService.save(commentLikeLog);
+        return comment;
     }
 
     @Override

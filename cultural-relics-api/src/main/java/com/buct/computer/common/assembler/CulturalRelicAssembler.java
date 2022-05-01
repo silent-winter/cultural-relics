@@ -21,8 +21,10 @@ public interface CulturalRelicAssembler {
     CulturalRelicAssembler MAPPER = Mappers.getMapper(CulturalRelicAssembler.class);
 
 
+    @Mapping(target = "likeNum", ignore = true)
     @Mapping(target = "status", expression = "java(getStatusFromLocation(culturalRelicInfoDTO.getLocation()))")
     @Mapping(target = "imageUrl", source = "imgName", qualifiedByName = "imageUrlConvert")
+    @Mapping(target = "museum", source = "location", qualifiedByName = "getMuseumFromLocation")
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "updateTime", ignore = true)
     @Mapping(target = "createTime", ignore = true)
@@ -33,6 +35,15 @@ public interface CulturalRelicAssembler {
     @Named("imageUrlConvert")
     default String imageUrlConvert(String imgName) {
         return "https://cultural-relics.oss-cn-beijing.aliyuncs.com/pic/" + imgName;
+    }
+
+    @Named("getMuseumFromLocation")
+    default String getMuseumFromLocation(String location) {
+        if (StringUtils.isBlank(location)) {
+            return StringUtils.EMPTY;
+        }
+        String[] split = StringUtils.split(location, ",");
+        return split[split.length - 1].trim();
     }
 
     default Integer getStatusFromLocation(String location) {

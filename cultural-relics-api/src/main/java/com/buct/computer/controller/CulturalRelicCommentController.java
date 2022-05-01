@@ -1,19 +1,14 @@
 package com.buct.computer.controller;
 
 
-import cn.dev33.satoken.stp.StpUtil;
 import com.buct.computer.common.assembler.CulturalRelicCommentAssembler;
-import com.buct.computer.model.CommentLikeLog;
 import com.buct.computer.model.CulturalRelicComment;
 import com.buct.computer.model.CulturalRelicInfo;
-import com.buct.computer.model.UserInfo;
 import com.buct.computer.request.CulturalRelicCommentDTO;
 import com.buct.computer.response.ApiResult;
 import com.buct.computer.response.vo.CulturalRelicCommentVO;
-import com.buct.computer.service.ICommentLikeLogService;
 import com.buct.computer.service.ICulturalRelicCommentService;
 import com.buct.computer.service.ICulturalRelicInfoService;
-import com.buct.computer.service.IUserInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -23,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -38,20 +34,18 @@ import java.util.stream.Collectors;
 @Api(tags = "用户评论相关接口")
 public class CulturalRelicCommentController {
 
+    private final ConcurrentHashMap<Long, Object> lockMap = new ConcurrentHashMap<>();
+
     @Autowired
     private ICulturalRelicInfoService culturalRelicInfoService;
     @Autowired
     private ICulturalRelicCommentService culturalRelicCommentService;
-    @Autowired
-    private ICommentLikeLogService commentLikeLogService;
-    @Autowired
-    private IUserInfoService userInfoService;
 
 
     @GetMapping("/page")
     @ApiOperation("根据文物id查询所有评论得分页数据")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "culturalRelicId", value = "文物id", defaultValue = "1" ,required = true),
+            @ApiImplicitParam(name = "culturalRelicId", value = "文物id", defaultValue = "1", required = true),
             @ApiImplicitParam(name = "page", value = "当前页码", defaultValue = "1"),
             @ApiImplicitParam(name = "size", value = "每页记录数", defaultValue = "10")
     })
@@ -69,27 +63,28 @@ public class CulturalRelicCommentController {
 
     @PostMapping("/like/{id}")
     @ApiOperation("评论点赞")
-    public ApiResult<CulturalRelicComment> doLike(@PathVariable("id") Long commentId) {
-        int loginUserId = StpUtil.getLoginIdAsInt();
-        UserInfo user = userInfoService.getById(loginUserId);
-        if (user == null) {
-            return ApiResult.fail(ApiResult.ENTITY_ABSENT, ApiResult.ENTITY_ABSENT_MSG);
+    public ApiResult<CulturalRelicComment> like(@PathVariable("id") Long commentId) {
+        lockMap.putIfAbsent(commentId, new Object());
+        synchronized (lockMap.get(commentId)) {
+            CulturalRelicComment comment = culturalRelicCommentService.getById(commentId);
+            if (comment == null) {
+                return ApiResult.fail(ApiResult.ENTITY_ABSENT, ApiResult.ENTITY_ABSENT_MSG);
+            }
+            return ApiResult.success(culturalRelicCommentService.likeOrUnlike(comment, true));
         }
-        CulturalRelicComment comment = culturalRelicCommentService.getById(commentId);
-        if (comment == null) {
-            return ApiResult.fail(ApiResult.ENTITY_ABSENT, ApiResult.ENTITY_ABSENT_MSG);
+    }
+
+    @PostMapping("/unlike/{id}")
+    @ApiOperation("取消评论点赞")
+    public ApiResult<CulturalRelicComment> unlike(@PathVariable("id") Long commentId) {
+        lockMap.putIfAbsent(commentId, new Object());
+        synchronized (lockMap.get(commentId)) {
+            CulturalRelicComment comment = culturalRelicCommentService.getById(commentId);
+            if (comment == null) {
+                return ApiResult.fail(ApiResult.ENTITY_ABSENT, ApiResult.ENTITY_ABSENT_MSG);
+            }
+            return ApiResult.success(culturalRelicCommentService.likeOrUnlike(comment, false));
         }
-        comment.setLikeNum(comment.getLikeNum() + 1);
-        culturalRelicCommentService.updateById(comment);
-        // 保存点赞记录
-        CommentLikeLog commentLikeLog = CommentLikeLog.builder()
-                .commentId(commentId)
-                .likeUserId(loginUserId)
-                .likeUserName(user.getUserName())
-                .noticeFlag(true)
-                .build();
-        commentLikeLogService.save(commentLikeLog);
-        return ApiResult.success(comment);
     }
 
 

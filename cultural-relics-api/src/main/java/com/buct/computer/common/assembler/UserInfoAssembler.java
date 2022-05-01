@@ -1,5 +1,6 @@
 package com.buct.computer.common.assembler;
 
+import com.alibaba.fastjson.JSON;
 import com.buct.computer.model.UserInfo;
 import com.buct.computer.request.UserRegisterDTO;
 import com.buct.computer.response.vo.UserInfoDetailVO;
@@ -27,16 +28,18 @@ public interface UserInfoAssembler {
 
     @Mapping(target = "browseIds", ignore = true)
     @Mapping(target = "collectIds", expression = "java(convertCollection(userInfo.getCollection()))")
+    @Mapping(target = "likeIds", expression = "java(convertCollection(userInfo.getLikeCulturalRelics()))")
     UserInfoDetailVO userInfoToUserInfoDetailVO(UserInfo userInfo);
 
-    default Set<Long> convertCollection(String collection) {
-        if (StringUtils.isBlank(collection)) {
+    default Set<Long> convertCollection(String ids) {
+        if (StringUtils.isBlank(ids)) {
             return Sets.newHashSet();
         }
-        return Sets.newHashSet(StringUtils.split(collection, ",")).stream().map(Long::valueOf).collect(Collectors.toSet());
+        return Sets.newHashSet(JSON.parseArray(ids, Long.class));
     }
 
 
+    @Mapping(target = "likeCulturalRelics", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "updateTime", ignore = true)
     @Mapping(target = "status", ignore = true)

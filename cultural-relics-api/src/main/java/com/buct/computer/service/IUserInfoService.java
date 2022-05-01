@@ -13,4 +13,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IUserInfoService extends IService<UserInfo> {
 
+    void updateList(UserInfo userInfo, String type, String id, boolean isAdd);
+
 }

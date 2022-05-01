@@ -13,4 +13,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ICulturalRelicInfoService extends IService<CulturalRelicInfo> {
 
+    CulturalRelicInfo likeOrUnlike(CulturalRelicInfo culturalRelicInfo, boolean isLike);
+
+    void collectOrCancelCollect(Long id, boolean isCollect);
+
 }

@@ -47,4 +47,7 @@ public class UserInfoDetailVO {
     @ApiModelProperty("用户收藏的文物id列表")
     private Set<Long> collectIds;
 
+    @ApiModelProperty("用户点赞的文物id列表")
+    private Set<Long> likeIds;
+
 }

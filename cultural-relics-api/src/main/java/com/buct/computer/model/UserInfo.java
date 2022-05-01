@@ -85,6 +85,13 @@ public class UserInfo implements Serializable {
     private String collection;
 
     /**
+     * 用户点赞的文物id集合
+     */
+    @TableField("like_cultural_relics")
+    @ApiModelProperty(hidden = true)
+    private String likeCulturalRelics;
+
+    /**
      * 是否可用
      */
     @TableField("status")

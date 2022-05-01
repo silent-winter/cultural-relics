@@ -99,6 +99,18 @@ public class CulturalRelicInfo implements Serializable {
     private String location;
 
     /**
+     * 文物所属博物馆
+     */
+    @TableField("museum")
+    private String museum;
+
+    /**
+     * 文物所在地址信息
+     */
+    @TableField("like_num")
+    private Integer likeNum;
+
+    /**
      * 记录创建时间
      */
     @TableField(value = "create_time", fill = FieldFill.INSERT)
