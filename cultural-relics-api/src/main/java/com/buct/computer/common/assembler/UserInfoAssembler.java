@@ -1,6 +1,7 @@
 package com.buct.computer.common.assembler;
 
 import com.buct.computer.model.UserInfo;
+import com.buct.computer.request.UserRegisterDTO;
 import com.buct.computer.response.vo.UserInfoDetailVO;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
@@ -29,7 +30,18 @@ public interface UserInfoAssembler {
     UserInfoDetailVO userInfoToUserInfoDetailVO(UserInfo userInfo);
 
     default Set<Long> convertCollection(String collection) {
+        if (StringUtils.isBlank(collection)) {
+            return Sets.newHashSet();
+        }
         return Sets.newHashSet(StringUtils.split(collection, ",")).stream().map(Long::valueOf).collect(Collectors.toSet());
     }
+
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "updateTime", ignore = true)
+    @Mapping(target = "status", ignore = true)
+    @Mapping(target = "createTime", ignore = true)
+    @Mapping(target = "collection", ignore = true)
+    UserInfo userRegisterDTOToUserInfo(UserRegisterDTO userRegisterDTO);
 
 }

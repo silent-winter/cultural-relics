@@ -74,18 +74,21 @@ public class UserInfo implements Serializable {
      * 用户类型(管理员、普通用户)
      */
     @TableField("type")
+    @ApiModelProperty(hidden = true)
     private String type;
 
     /**
      * 用户收藏的文物id集合
      */
     @TableField("collection")
+    @ApiModelProperty(hidden = true)
     private String collection;
 
     /**
      * 是否可用
      */
     @TableField("status")
+    @ApiModelProperty(hidden = true)
     private Integer status;
 
     /**
@@ -93,6 +96,7 @@ public class UserInfo implements Serializable {
      */
     @TableField(value = "create_time", fill = FieldFill.INSERT)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(hidden = true)
     private Date createTime;
 
     /**
@@ -100,6 +104,7 @@ public class UserInfo implements Serializable {
      */
     @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(hidden = true)
     private Date updateTime;
 
 }
