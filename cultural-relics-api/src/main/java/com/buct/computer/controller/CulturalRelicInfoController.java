@@ -1,10 +1,7 @@
 package com.buct.computer.controller;
 
-
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.buct.computer.model.CulturalRelicInfo;
+import com.buct.computer.request.QueryRequestDTO;
 import com.buct.computer.response.ApiResult;
 import com.buct.computer.service.ICulturalRelicInfoService;
 import io.swagger.annotations.Api;
@@ -12,11 +9,10 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.http.util.Asserts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -43,25 +39,23 @@ public class CulturalRelicInfoController {
     @GetMapping("/page")
     @ApiOperation("条件查询，获取文物分页数据")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "name", value = "文物名字"),
+            @ApiImplicitParam(name = "isFuzzy", value = "是否使用模糊查询", required = true),
+            @ApiImplicitParam(name = "keyword", value = "模糊匹配的搜索关键字"),
+            @ApiImplicitParam(name = "medium", value = "高级搜索时填，文物材质", defaultValue = "bronze,copper,silver"),
+            @ApiImplicitParam(name = "artist", value = "高级搜索时填，文物作者，可匹配多个，逗号分割", defaultValue = "unknown,Chinese"),
+            @ApiImplicitParam(name = "customClass", value = "高级搜索时填，文物自定义类别，可匹配多个，逗号分割",
+                    defaultValue = "Numismatics,Container,Paintings"),
+            @ApiImplicitParam(name = "status", value = "高级搜索时填，在展情况", defaultValue = "1"),
+            @ApiImplicitParam(name = "museum", value = "高级搜索时填，文物所属博物馆，可匹配多个，逗号分割",
+                    defaultValue = "Yale University Art Gallery,Saint Louis Art Museum"),
             @ApiImplicitParam(name = "sort", value = "排序条件{字段}:{asc|desc}", defaultValue = "like_num:desc"),
-            @ApiImplicitParam(name = "page", value = "当前页码", defaultValue = "1"),
-            @ApiImplicitParam(name = "size", value = "每页记录数", defaultValue = "10")
+            @ApiImplicitParam(name = "page", value = "当前页码", defaultValue = "1", required = true),
+            @ApiImplicitParam(name = "size", value = "每页记录数", defaultValue = "10", required = true)
     })
-    public ApiResult<List<CulturalRelicInfo>> getPage(@RequestParam(value = "name", required = false) String name,
-                                                      @RequestParam(value = "sort", required = false) String sort,
-                                                      @RequestParam(value = "page", defaultValue = "1") Integer page,
-                                                      @RequestParam(value = "size", defaultValue = "10") Integer size) {
-        QueryWrapper<CulturalRelicInfo> queryWrapper = new QueryWrapper<>();
-        if (StringUtils.isNotBlank(name)) {
-            queryWrapper.like("name", name);
-        }
-        if (StringUtils.isNotBlank(sort)) {
-            String[] split = StringUtils.split(sort, ":");
-            queryWrapper.orderBy(true, StringUtils.equalsIgnoreCase(split[1], "asc"), split[0]);
-        }
-        Page<CulturalRelicInfo> pageResult = culturalRelicInfoService.page(new Page<>(page, size), queryWrapper);
-        return ApiResult.success(pageResult.getRecords());
+    public ApiResult<List<CulturalRelicInfo>> getPage(QueryRequestDTO queryRequestDTO) {
+        checkQueryParam(queryRequestDTO);
+        List<CulturalRelicInfo> culturalRelicInfoList = culturalRelicInfoService.queryByCondition(queryRequestDTO);
+        return ApiResult.success(culturalRelicInfoList);
     }
 
     @PostMapping("/like/{id}")
@@ -110,6 +104,13 @@ public class CulturalRelicInfoController {
         }
         culturalRelicInfoService.collectOrCancelCollect(id, false);
         return ApiResult.success(culturalRelicInfo);
+    }
+
+
+    private void checkQueryParam(QueryRequestDTO queryRequestDTO) {
+        Asserts.notNull(queryRequestDTO.getPage(), "当前页不能为空");
+        Asserts.notNull(queryRequestDTO.getSize(), "每页大小不能为空");
+        Asserts.notNull(queryRequestDTO.getIsFuzzy(), "查询模式不能为空");
     }
 
 }

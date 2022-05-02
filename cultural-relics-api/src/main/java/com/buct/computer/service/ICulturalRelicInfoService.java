@@ -2,6 +2,9 @@ package com.buct.computer.service;
 
 import com.buct.computer.model.CulturalRelicInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.buct.computer.request.QueryRequestDTO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -16,5 +19,7 @@ public interface ICulturalRelicInfoService extends IService<CulturalRelicInfo> {
     CulturalRelicInfo likeOrUnlike(CulturalRelicInfo culturalRelicInfo, boolean isLike);
 
     void collectOrCancelCollect(Long id, boolean isCollect);
+
+    List<CulturalRelicInfo> queryByCondition(QueryRequestDTO queryRequestDTO);
 
 }

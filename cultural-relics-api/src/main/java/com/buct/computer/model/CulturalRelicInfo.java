@@ -87,6 +87,12 @@ public class CulturalRelicInfo implements Serializable {
     private String classification;
 
     /**
+     * 自定义分类，查询时所用
+     */
+    @TableField("custom_class")
+    private String customClass;
+
+    /**
      * 详情页地址
      */
     @TableField("detail_url")

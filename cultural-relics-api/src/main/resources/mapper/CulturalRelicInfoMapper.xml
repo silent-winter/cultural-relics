@@ -13,6 +13,7 @@
         <result column="status" property="status" />
         <result column="detail" property="detail" />
         <result column="classification" property="classification" />
+        <result column="custom_class" property="customClass" />
         <result column="location" property="location" />
         <result column="detail_url" property="detailUrl" />
         <result column="dimension" property="dimension" />
@@ -24,7 +25,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, discover_time, image_url, medium, artist, status, detail, classification, location, museum, like_num, detail_url, dimension, create_time, update_time
+        id, name, discover_time, image_url, medium, artist, status, detail, classification, custom_class, location, museum, like_num, detail_url, dimension, create_time, update_time
     </sql>
 
 </mapper>
