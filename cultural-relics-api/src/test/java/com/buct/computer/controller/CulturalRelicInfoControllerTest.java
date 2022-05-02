@@ -90,4 +90,70 @@ public class CulturalRelicInfoControllerTest {
         culturalRelicInfoService.updateBatchById(culturalRelicInfoList);
     }
 
+
+    @Test
+    void fillCustomClass() {
+        List<CulturalRelicInfo> culturalRelicInfoList = culturalRelicInfoService.getBaseMapper().selectList(null);
+        culturalRelicInfoList = culturalRelicInfoList.stream().map(e -> {
+            String classification = e.getClassification();
+            if (StringUtils.equalsAnyIgnoreCase(classification, "Numismatics")) {
+                e.setCustomClass("Numismatics");
+            } else if (StringUtils.equalsAnyIgnoreCase(classification, "Containers - Ceramics", "Ceramics, containers",
+                    "Containers - Metals", "Containers, metalwork", "Containers - Wood", "Containers - Stone", "Ceramics",
+                    "Containers - Lacquer", "Containers - Glass", "Ceramics, models & maquettes", "Containers - Baskets",
+                    "Containers - Plastic", "Ceramics, sculpture", "Ceramics, tools & equipment", "Basketry, containers")) {
+                e.setCustomClass("Container");
+            } else if (StringUtils.equalsAnyIgnoreCase(classification, "Paintings",
+                    "Works on Paper - Other",
+                    "Works on Paper - Prints",
+                    "Works on Paper - Drawings and Watercolors",
+                    "Works on Paper - Photographs",
+                    "Works on Paper - Prints - Posters",
+                    "Works on Paper - Multiples")) {
+                e.setCustomClass("Paintings");
+            } else if (StringUtils.equalsAnyIgnoreCase(classification, "Sculpture",
+                    "Metalwork, sculpture",
+                    "Sculpture, stone & mineral",
+                    "Sculpture, wood",
+                    "Jades, sculpture")) {
+                e.setCustomClass("Sculpture");
+            } else if (StringUtils.equalsAnyIgnoreCase(classification, "Textiles",
+                    "Apparel/Costume",
+                    "Costume & clothing, jades")) {
+                e.setCustomClass("Costume");
+            } else if (StringUtils.equalsAnyIgnoreCase(classification, "Calligraphy")) {
+                e.setCustomClass("Calligraphy");
+            } else if (StringUtils.equalsAnyIgnoreCase(classification, "Jewelry",
+                    "Furniture",
+                    "Architectural Elements",
+                    "Jades, jewelry & personal accessories")) {
+                e.setCustomClass("ArtWare");
+            } else if (StringUtils.equalsAnyIgnoreCase(classification, "Tools and Equipment",
+                    "Containers - Other",
+                    "Flatware",
+                    "Arms and Armor",
+                    "Jades",
+                    "Arms & armor, jades",
+                    "Musical Instruments",
+                    "Metalwork, tools & equipment",
+                    "Jades, stone & mineral",
+                    "Miniatures",
+                    "Containers, jades",
+                    "Ritual Objects",
+                    "Lighting Devices",
+                    "Stained Glass",
+                    "Timepieces",
+                    "Toys and Games",
+                    "Metalwork",
+                    "Metalwork, musical instruments",
+                    "Arms & armor, metalwork",
+                    "Jewelry & personal accessories, metalwork",
+                    "Ceramics, jewelry & personal accessories")) {
+                e.setCustomClass("Others");
+            }
+            return e;
+        }).collect(Collectors.toList());
+        culturalRelicInfoService.updateBatchById(culturalRelicInfoList);
+    }
+
 }
