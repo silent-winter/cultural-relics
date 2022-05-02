@@ -41,10 +41,10 @@ public class CulturalRelicInfoController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "isFuzzy", value = "是否使用模糊查询", required = true),
             @ApiImplicitParam(name = "keyword", value = "模糊匹配的搜索关键字"),
-            @ApiImplicitParam(name = "medium", value = "高级搜索时填，文物材质", defaultValue = "bronze,copper,silver"),
+            @ApiImplicitParam(name = "medium", value = "高级搜索时填，文物材质", defaultValue = "bronze,copper,silver,Porcelain,Iron"),
             @ApiImplicitParam(name = "artist", value = "高级搜索时填，文物作者，可匹配多个，逗号分割", defaultValue = "unknown,Chinese"),
             @ApiImplicitParam(name = "customClass", value = "高级搜索时填，文物自定义类别，可匹配多个，逗号分割",
-                    defaultValue = "Numismatics,Container,Paintings"),
+                    defaultValue = "Numismatics,Container,Paintings,Sculpture"),
             @ApiImplicitParam(name = "status", value = "高级搜索时填，在展情况", defaultValue = "1"),
             @ApiImplicitParam(name = "museum", value = "高级搜索时填，文物所属博物馆，可匹配多个，逗号分割",
                     defaultValue = "Yale University Art Gallery,Saint Louis Art Museum"),
