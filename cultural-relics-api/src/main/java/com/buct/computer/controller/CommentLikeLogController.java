@@ -37,7 +37,7 @@ public class CommentLikeLogController {
 
 
     @GetMapping("/beLikedComments")
-    @ApiOperation("查询当前登录用户评论点赞记录")
+    @ApiOperation("查询当前登录用户哪些评论被点过赞")
     public ApiResult<List<CommentLikeLog>> getUserLike() {
         Integer userId = StpUtil.getLoginId(0);
         List<CommentLikeLog> commentLikeLogs = commentLikeLogService.getBaseMapper()
@@ -47,7 +47,7 @@ public class CommentLikeLogController {
 
 
     @GetMapping("/likeComments")
-    @ApiOperation("查询指定用户的点赞的评论记录")
+    @ApiOperation("查询指定用户点赞的评论")
     public ApiResult<List<CommentLikeLog>> getUserLike(@RequestParam(value = "userId", required = false) Integer userId) {
         if (Objects.isNull(userId)) {
             userId = StpUtil.getLoginId(0);

@@ -3,6 +3,7 @@ package com.buct.computer.service;
 import com.buct.computer.model.CulturalRelicInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.buct.computer.request.QueryRequestDTO;
+import com.buct.computer.response.vo.PageResultVO;
 
 import java.util.List;
 
@@ -20,6 +21,6 @@ public interface ICulturalRelicInfoService extends IService<CulturalRelicInfo> {
 
     void collectOrCancelCollect(Long id, boolean isCollect);
 
-    List<CulturalRelicInfo> queryByCondition(QueryRequestDTO queryRequestDTO);
+    PageResultVO<CulturalRelicInfo> queryByCondition(QueryRequestDTO queryRequestDTO);
 
 }

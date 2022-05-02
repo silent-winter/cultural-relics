@@ -8,6 +8,7 @@ import com.buct.computer.mapper.CulturalRelicInfoMapper;
 import com.buct.computer.model.UserInfo;
 import com.buct.computer.request.QueryRequestDTO;
 import com.buct.computer.response.ApiResult;
+import com.buct.computer.response.vo.PageResultVO;
 import com.buct.computer.service.ICulturalRelicInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.buct.computer.service.IUserInfoService;
@@ -58,12 +59,17 @@ public class CulturalRelicInfoServiceImpl extends ServiceImpl<CulturalRelicInfoM
     }
 
     @Override
-    public List<CulturalRelicInfo> queryByCondition(QueryRequestDTO queryRequestDTO) {
+    public PageResultVO<CulturalRelicInfo> queryByCondition(QueryRequestDTO queryRequestDTO) {
         QueryWrapper<CulturalRelicInfo> queryWrapper = buildQueryWrapper(queryRequestDTO);
         Page<CulturalRelicInfo> infoPage = this.baseMapper.selectPage(
                 new Page<>(queryRequestDTO.getPage(), queryRequestDTO.getSize()), queryWrapper
         );
-        return infoPage.getRecords();
+        PageResultVO<CulturalRelicInfo> pageResultVO = new PageResultVO<>();
+        pageResultVO.setTotal(infoPage.getTotal());
+        pageResultVO.setCurrent(infoPage.getCurrent());
+        pageResultVO.setSize(infoPage.getSize());
+        pageResultVO.setRecords(infoPage.getRecords());
+        return pageResultVO;
     }
 
 

@@ -1,8 +1,10 @@
 package com.buct.computer.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.buct.computer.model.CulturalRelicInfo;
 import com.buct.computer.request.QueryRequestDTO;
 import com.buct.computer.response.ApiResult;
+import com.buct.computer.response.vo.PageResultVO;
 import com.buct.computer.service.ICulturalRelicInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -52,9 +54,19 @@ public class CulturalRelicInfoController {
             @ApiImplicitParam(name = "page", value = "当前页码", defaultValue = "1", required = true),
             @ApiImplicitParam(name = "size", value = "每页记录数", defaultValue = "10", required = true)
     })
-    public ApiResult<List<CulturalRelicInfo>> getPage(QueryRequestDTO queryRequestDTO) {
+    public ApiResult<PageResultVO<CulturalRelicInfo>> getPage(QueryRequestDTO queryRequestDTO) {
         checkQueryParam(queryRequestDTO);
-        List<CulturalRelicInfo> culturalRelicInfoList = culturalRelicInfoService.queryByCondition(queryRequestDTO);
+        PageResultVO<CulturalRelicInfo> pageResultVO = culturalRelicInfoService.queryByCondition(queryRequestDTO);
+        return ApiResult.success(pageResultVO);
+    }
+
+
+    @PostMapping("/listByIds")
+    @ApiOperation("根据id数组批量查询文物信息")
+    public ApiResult<List<CulturalRelicInfo>> getListByIds(@RequestBody List<Long> ids) {
+        List<CulturalRelicInfo> culturalRelicInfoList = culturalRelicInfoService.getBaseMapper().selectList(
+                new LambdaQueryWrapper<CulturalRelicInfo>().in(CulturalRelicInfo::getId, ids)
+        );
         return ApiResult.success(culturalRelicInfoList);
     }
 
@@ -109,7 +121,9 @@ public class CulturalRelicInfoController {
 
     private void checkQueryParam(QueryRequestDTO queryRequestDTO) {
         Asserts.notNull(queryRequestDTO.getPage(), "当前页不能为空");
+        Asserts.check(queryRequestDTO.getPage() > 0, "页号必须大于0");
         Asserts.notNull(queryRequestDTO.getSize(), "每页大小不能为空");
+        Asserts.check(queryRequestDTO.getSize() > 0, "页大小必须大于0");
         Asserts.notNull(queryRequestDTO.getIsFuzzy(), "查询模式不能为空");
     }
 
