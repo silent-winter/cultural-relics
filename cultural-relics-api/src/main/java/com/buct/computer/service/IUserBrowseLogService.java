@@ -3,6 +3,7 @@ package com.buct.computer.service;
 import com.buct.computer.model.UserBrowseLog;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -15,6 +16,8 @@ import java.util.Set;
  */
 public interface IUserBrowseLogService extends IService<UserBrowseLog> {
 
-    Set<Long> getLast3DaysBrowseLog(Integer userId);
+    List<Long> getLast3DaysBrowseLog(Integer userId);
+
+    UserBrowseLog findByCulturalRelicId(Long id);
 
 }

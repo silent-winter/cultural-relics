@@ -22,6 +22,7 @@
         <where>
             browse_time &gt;= now() - interval 3 day
         </where>
+        order by browse_time desc
     </select>
 
 </mapper>

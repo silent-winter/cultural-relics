@@ -1,5 +1,6 @@
 package com.buct.computer.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.buct.computer.model.UserBrowseLog;
 import com.buct.computer.mapper.UserBrowseLogMapper;
 import com.buct.computer.service.IUserBrowseLogService;
@@ -27,8 +28,13 @@ public class UserBrowseLogServiceImpl extends ServiceImpl<UserBrowseLogMapper, U
 
 
     @Override
-    public Set<Long> getLast3DaysBrowseLog(Integer userId) {
+    public List<Long> getLast3DaysBrowseLog(Integer userId) {
         List<UserBrowseLog> userInfoList = userBrowseLogMapper.selectLast3DaysBrowseLogByUserId(userId);
-        return userInfoList.stream().map(UserBrowseLog::getCulturalRelicId).collect(Collectors.toSet());
+        return userInfoList.stream().map(UserBrowseLog::getCulturalRelicId).collect(Collectors.toList());
+    }
+
+    @Override
+    public UserBrowseLog findByCulturalRelicId(Long id) {
+        return this.baseMapper.selectOne(new LambdaQueryWrapper<UserBrowseLog>().eq(UserBrowseLog::getCulturalRelicId, id));
     }
 }

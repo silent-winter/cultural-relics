@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -41,8 +42,8 @@ public class UserInfoDetailVO {
     @ApiModelProperty("邮箱")
     private String email;
 
-    @ApiModelProperty("最近三天浏览的文物id列表")
-    private Set<Long> browseIds;
+    @ApiModelProperty("最近三天浏览的文物id列表，最近浏览的靠前")
+    private List<Long> browseIds;
 
     @ApiModelProperty("用户收藏的文物id列表")
     private Set<Long> collectIds;
