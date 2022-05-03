@@ -45,17 +45,15 @@ public class CulturalRelicInfoServiceImpl extends ServiceImpl<CulturalRelicInfoM
         culturalRelicInfo.setLikeNum(isLike ? originLikeNum + 1 : originLikeNum - 1);
         this.updateById(culturalRelicInfo);
         // 更新用户信息
-        UserInfo user = userInfoService.getById(StpUtil.getLoginId(0));
-        Asserts.notNull(user, "当前用户未登录");
-        userInfoService.updateList(user, "like", String.valueOf(culturalRelicInfo.getId()), isLike);
+        UserInfo loginUser = userInfoService.getLoginUser();
+        userInfoService.updateList(loginUser, "like", String.valueOf(culturalRelicInfo.getId()), isLike);
         return culturalRelicInfo;
     }
 
     @Override
     public void collectOrCancelCollect(Long id, boolean isCollect) {
-        UserInfo user = userInfoService.getById(StpUtil.getLoginId(0));
-        Asserts.notNull(user, "当前用户未登录");
-        userInfoService.updateList(user, "collection", String.valueOf(id), isCollect);
+        UserInfo loginUser = userInfoService.getLoginUser();
+        userInfoService.updateList(loginUser, "collection", String.valueOf(id), isCollect);
     }
 
     @Override

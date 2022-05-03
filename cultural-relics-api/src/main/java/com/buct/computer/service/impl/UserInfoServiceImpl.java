@@ -1,5 +1,7 @@
 package com.buct.computer.service.impl;
 
+import cn.dev33.satoken.exception.NotLoginException;
+import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.fastjson.JSON;
 import com.buct.computer.common.exception.LikeException;
 import com.buct.computer.model.UserInfo;
@@ -24,6 +26,14 @@ import java.util.Set;
  */
 @Service
 public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> implements IUserInfoService {
+
+    @Override
+    public UserInfo getLoginUser() {
+        Integer userId = StpUtil.getLoginId(0);
+        UserInfo user = this.getById(userId);
+        Asserts.notNull(user, "用户未登录");
+        return user;
+    }
 
     @Override
     public void updateList(UserInfo userInfo, String type, String id, boolean isAdd) {

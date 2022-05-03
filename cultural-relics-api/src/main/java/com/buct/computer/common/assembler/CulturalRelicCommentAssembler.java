@@ -25,6 +25,8 @@ public interface CulturalRelicCommentAssembler {
     CulturalRelicCommentVO CulturalRelicCommentToCulturalRelicCommentVO(CulturalRelicComment culturalRelicComment);
 
 
+    @Mapping(target = "publishUserName", ignore = true)
+    @Mapping(target = "publishUserId", ignore = true)
     @Mapping(target = "updateTime", ignore = true)
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "likeNum", ignore = true)

@@ -1,15 +1,18 @@
 package com.buct.computer.controller;
 
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.buct.computer.common.assembler.CulturalRelicCommentAssembler;
 import com.buct.computer.model.CulturalRelicComment;
 import com.buct.computer.model.CulturalRelicInfo;
+import com.buct.computer.model.UserInfo;
 import com.buct.computer.request.CulturalRelicCommentDTO;
 import com.buct.computer.request.LikeRequestDTO;
 import com.buct.computer.response.ApiResult;
 import com.buct.computer.response.vo.CulturalRelicCommentVO;
 import com.buct.computer.service.ICulturalRelicCommentService;
 import com.buct.computer.service.ICulturalRelicInfoService;
+import com.buct.computer.service.IUserInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -41,6 +44,8 @@ public class CulturalRelicCommentController {
     private ICulturalRelicInfoService culturalRelicInfoService;
     @Autowired
     private ICulturalRelicCommentService culturalRelicCommentService;
+    @Autowired
+    private IUserInfoService userInfoService;
 
 
     @GetMapping("/page")
@@ -64,7 +69,7 @@ public class CulturalRelicCommentController {
 
     @PostMapping("/handleLike")
     @ApiOperation("评估点赞或者是取消点赞")
-    public ApiResult<CulturalRelicComment> unlike(@RequestBody LikeRequestDTO likeRequestDTO) {
+    public ApiResult<CulturalRelicComment> handleLike(@RequestBody LikeRequestDTO likeRequestDTO) {
         Long commentId = likeRequestDTO.getTargetId();
         lockMap.putIfAbsent(commentId, new Object());
         synchronized (lockMap.get(commentId)) {
@@ -80,10 +85,13 @@ public class CulturalRelicCommentController {
     @PostMapping("/publish")
     @ApiOperation("发表评论")
     public ApiResult<CulturalRelicComment> publishComment(@RequestBody CulturalRelicCommentDTO culturalRelicCommentDTO) {
+        UserInfo loginUser = userInfoService.getLoginUser();
         CulturalRelicComment comment = CulturalRelicCommentAssembler.MAPPER
                 .CulturalRelicCommentDTOToCulturalRelicComment(culturalRelicCommentDTO);
         comment.setLikeNum(0);
         comment.setStatus(1);
+        comment.setPublishUserId(loginUser.getId());
+        comment.setPublishUserName(loginUser.getUserName());
         culturalRelicCommentService.save(comment);
         return ApiResult.success(comment);
     }
