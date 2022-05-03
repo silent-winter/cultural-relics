@@ -52,8 +52,7 @@ public class CommentLikeLogController {
         if (Objects.isNull(userId)) {
             userId = StpUtil.getLoginId(0);
         }
-        List<CommentLikeLog> commentLikeLogs = commentLikeLogService.getBaseMapper()
-                .selectList(new LambdaQueryWrapper<CommentLikeLog>().eq(CommentLikeLog::getLikeUserId, userId));
+        List<CommentLikeLog> commentLikeLogs = commentLikeLogService.findByLikeUserId(userId);
         return ApiResult.success(commentLikeLogs);
     }
 

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.buct.computer.common.assembler.CulturalRelicCommentAssembler;
 import com.buct.computer.common.exception.InvalidParamException;
+import com.buct.computer.common.exception.LikeException;
 import com.buct.computer.model.CommentLikeLog;
 import com.buct.computer.model.CulturalRelicComment;
 import com.buct.computer.mapper.CulturalRelicCommentMapper;
@@ -97,14 +98,27 @@ public class CulturalRelicCommentServiceImpl extends ServiceImpl<CulturalRelicCo
         // 保存点赞记录
         UserInfo user = userInfoService.getById(StpUtil.getLoginId(0));
         Asserts.notNull(user, "当前用户未登录");
-        CommentLikeLog commentLikeLog = CommentLikeLog.builder()
-                .commentId(comment.getId())
-                .userId(comment.getPublishUserId())
-                .likeUserId(user.getId())
-                .likeUserName(user.getUserName())
-                .noticeFlag(true)
-                .build();
-        commentLikeLogService.save(commentLikeLog);
+        Integer userId = user.getId();
+        CommentLikeLog logBefore = commentLikeLogService.findByCommentIdAndLikeUserId(comment.getId(), userId);
+        if (isLike) {
+            if (logBefore != null) {
+                throw new LikeException("当前用户已经对该评论点过赞，无法重复点赞");
+            }
+            Integer publishUserId = comment.getPublishUserId();
+            CommentLikeLog commentLikeLog = CommentLikeLog.builder()
+                    .commentId(comment.getId())
+                    .userId(publishUserId)
+                    .likeUserId(userId)
+                    .likeUserName(user.getUserName())
+                    .noticeFlag(!publishUserId.equals(userId))
+                    .build();
+            commentLikeLogService.save(commentLikeLog);
+        } else {
+            if (logBefore == null) {
+                throw new LikeException("当前用户未对该评论点赞，无法取消点赞");
+            }
+            commentLikeLogService.removeById(logBefore.getId());
+        }
         return comment;
     }
 

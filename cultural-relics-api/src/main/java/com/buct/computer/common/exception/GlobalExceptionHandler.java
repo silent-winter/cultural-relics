@@ -24,6 +24,12 @@ public class GlobalExceptionHandler {
         return ApiResult.fail(ApiResult.ERROR_PARAM, ApiResult.ERROR_PARAM_MSG);
     }
 
+    @ExceptionHandler(LikeException.class)
+    public ApiResult<String> handleLikeException(LikeException e){
+        log.warn("handleLikeException detected!", e);
+        return ApiResult.fail(ApiResult.ERROR_PARAM, e.getMessage());
+    }
+
     @ExceptionHandler(NotLoginException.class)
     public ApiResult<String> handleNotLoginException(NotLoginException e){
         log.warn("handleNotLoginException detected!", e);

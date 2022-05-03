@@ -2,6 +2,7 @@ package com.buct.computer.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.buct.computer.model.CulturalRelicInfo;
+import com.buct.computer.request.LikeRequestDTO;
 import com.buct.computer.request.QueryRequestDTO;
 import com.buct.computer.response.ApiResult;
 import com.buct.computer.response.vo.PageResultVO;
@@ -70,51 +71,29 @@ public class CulturalRelicInfoController {
         return ApiResult.success(culturalRelicInfoList);
     }
 
-    @PostMapping("/like/{id}")
-    @ApiOperation("文物点赞")
-    public ApiResult<CulturalRelicInfo> like(@PathVariable("id") Long id) {
+    @PostMapping("/handleLike")
+    @ApiOperation("文物点赞或取消点赞")
+    public ApiResult<CulturalRelicInfo> handleLike(@RequestBody LikeRequestDTO likeRequestDTO) {
+        Long id = likeRequestDTO.getTargetId();
         lockMap.putIfAbsent(id, new Object());
         synchronized (lockMap.get(id)) {
             CulturalRelicInfo culturalRelicInfo = culturalRelicInfoService.getById(id);
             if (culturalRelicInfo == null) {
                 return ApiResult.fail(ApiResult.ENTITY_ABSENT, ApiResult.ENTITY_ABSENT_MSG);
             }
-            return ApiResult.success(culturalRelicInfoService.likeOrUnlike(culturalRelicInfo, true));
+            return ApiResult.success(culturalRelicInfoService.likeOrUnlike(culturalRelicInfo, likeRequestDTO.getIsAdd()));
         }
     }
 
-    @PostMapping("/unlike/{id}")
-    @ApiOperation("取消文物点赞")
-    public ApiResult<CulturalRelicInfo> unlike(@PathVariable("id") Long id) {
-        lockMap.putIfAbsent(id, new Object());
-        synchronized (lockMap.get(id)) {
-            CulturalRelicInfo culturalRelicInfo = culturalRelicInfoService.getById(id);
-            if (culturalRelicInfo == null) {
-                return ApiResult.fail(ApiResult.ENTITY_ABSENT, ApiResult.ENTITY_ABSENT_MSG);
-            }
-            return ApiResult.success(culturalRelicInfoService.likeOrUnlike(culturalRelicInfo, false));
-        }
-    }
-
-    @PostMapping("/collect/{id}")
-    @ApiOperation("文物收藏")
-    public ApiResult<CulturalRelicInfo> collect(@PathVariable("id") Long id) {
+    @PostMapping("/handleCollect")
+    @ApiOperation("文物收藏或取消收藏")
+    public ApiResult<CulturalRelicInfo> handleCollect(@RequestBody LikeRequestDTO likeRequestDTO) {
+        Long id = likeRequestDTO.getTargetId();
         CulturalRelicInfo culturalRelicInfo = culturalRelicInfoService.getById(id);
         if (culturalRelicInfo == null) {
             return ApiResult.fail(ApiResult.ENTITY_ABSENT, ApiResult.ENTITY_ABSENT_MSG);
         }
-        culturalRelicInfoService.collectOrCancelCollect(id, true);
-        return ApiResult.success(culturalRelicInfo);
-    }
-
-    @PostMapping("/cancelCollect/{id}")
-    @ApiOperation("取消文物收藏")
-    public ApiResult<CulturalRelicInfo> cancelCollect(@PathVariable("id") Long id) {
-        CulturalRelicInfo culturalRelicInfo = culturalRelicInfoService.getById(id);
-        if (culturalRelicInfo == null) {
-            return ApiResult.fail(ApiResult.ENTITY_ABSENT, ApiResult.ENTITY_ABSENT_MSG);
-        }
-        culturalRelicInfoService.collectOrCancelCollect(id, false);
+        culturalRelicInfoService.collectOrCancelCollect(id, likeRequestDTO.getIsAdd());
         return ApiResult.success(culturalRelicInfo);
     }
 

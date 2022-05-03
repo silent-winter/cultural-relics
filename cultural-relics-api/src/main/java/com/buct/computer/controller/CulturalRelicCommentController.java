@@ -5,6 +5,7 @@ import com.buct.computer.common.assembler.CulturalRelicCommentAssembler;
 import com.buct.computer.model.CulturalRelicComment;
 import com.buct.computer.model.CulturalRelicInfo;
 import com.buct.computer.request.CulturalRelicCommentDTO;
+import com.buct.computer.request.LikeRequestDTO;
 import com.buct.computer.response.ApiResult;
 import com.buct.computer.response.vo.CulturalRelicCommentVO;
 import com.buct.computer.service.ICulturalRelicCommentService;
@@ -61,29 +62,17 @@ public class CulturalRelicCommentController {
     }
 
 
-    @PostMapping("/like/{id}")
-    @ApiOperation("评论点赞")
-    public ApiResult<CulturalRelicComment> like(@PathVariable("id") Long commentId) {
+    @PostMapping("/handleLike")
+    @ApiOperation("评估点赞或者是取消点赞")
+    public ApiResult<CulturalRelicComment> unlike(@RequestBody LikeRequestDTO likeRequestDTO) {
+        Long commentId = likeRequestDTO.getTargetId();
         lockMap.putIfAbsent(commentId, new Object());
         synchronized (lockMap.get(commentId)) {
             CulturalRelicComment comment = culturalRelicCommentService.getById(commentId);
             if (comment == null) {
                 return ApiResult.fail(ApiResult.ENTITY_ABSENT, ApiResult.ENTITY_ABSENT_MSG);
             }
-            return ApiResult.success(culturalRelicCommentService.likeOrUnlike(comment, true));
-        }
-    }
-
-    @PostMapping("/unlike/{id}")
-    @ApiOperation("取消评论点赞")
-    public ApiResult<CulturalRelicComment> unlike(@PathVariable("id") Long commentId) {
-        lockMap.putIfAbsent(commentId, new Object());
-        synchronized (lockMap.get(commentId)) {
-            CulturalRelicComment comment = culturalRelicCommentService.getById(commentId);
-            if (comment == null) {
-                return ApiResult.fail(ApiResult.ENTITY_ABSENT, ApiResult.ENTITY_ABSENT_MSG);
-            }
-            return ApiResult.success(culturalRelicCommentService.likeOrUnlike(comment, false));
+            return ApiResult.success(culturalRelicCommentService.likeOrUnlike(comment, likeRequestDTO.getIsAdd()));
         }
     }
 

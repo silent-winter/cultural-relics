@@ -1,12 +1,14 @@
 package com.buct.computer.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.buct.computer.common.exception.LikeException;
 import com.buct.computer.model.UserInfo;
 import com.buct.computer.mapper.UserInfoMapper;
 import com.buct.computer.service.IUserInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.util.Asserts;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -43,11 +45,17 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         return StringUtils.isBlank(str) ? Sets.newHashSet() : Sets.newHashSet(JSON.parseArray(str, String.class));
     }
 
-    private void addOrRemove(Set<String> set, String id, boolean isAdd) {
+    private void addOrRemove(Set<String> originSet, String id, boolean isAdd) {
         if (isAdd) {
-            set.add(id);
+            if (originSet.contains(id)) {
+                throw new LikeException("当前用户已经对该文物点赞/收藏，无法重复操作");
+            }
+            originSet.add(id);
         } else {
-            set.remove(id);
+            if (!originSet.contains(id)) {
+                throw new LikeException("当前用户未对该文物点赞/收藏，无法取消");
+            }
+            originSet.remove(id);
         }
     }
 
