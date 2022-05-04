@@ -96,6 +96,9 @@ public class UserInfoController {
         if (savedAccount == null) {
             return ApiResult.fail("the user hasn't registered");
         }
+        if (savedAccount.getStatus() == 0) {
+            return ApiResult.fail("the user's permission has been closed");
+        }
         StpUtil.login(savedAccount.getId());
         return ApiResult.success(StpUtil.getTokenInfo());
     }

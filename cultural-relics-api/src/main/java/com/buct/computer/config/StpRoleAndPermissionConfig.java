@@ -2,8 +2,11 @@ package com.buct.computer.config;
 
 import cn.dev33.satoken.stp.StpInterface;
 import cn.dev33.satoken.stp.StpUtil;
+import com.buct.computer.common.enums.UserTypeEnum;
+import com.buct.computer.model.UserInfo;
 import com.buct.computer.service.IUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +16,7 @@ import java.util.List;
  * @date 2022/4/25
  * @apiNote
  */
+@Component
 public class StpRoleAndPermissionConfig implements StpInterface {
 
     @Autowired
@@ -33,11 +37,11 @@ public class StpRoleAndPermissionConfig implements StpInterface {
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
         List<String> list = new ArrayList<>();
-        //if(memberMapper.selectById(StpUtil.getLoginId(0)).getLevel() >= 10) {
-        if ("admin".equals(userInfoService.getById(StpUtil.getLoginId(0)).getType())) {
-            list.add("admin");
+        UserInfo userInfo = userInfoService.getById(StpUtil.getLoginId(0));
+        if (UserTypeEnum.admin.getTypeName().equals(userInfo.getType())) {
+            list.add(UserTypeEnum.admin.getTypeName());
         } else {
-            list.add("user");
+            list.add(UserTypeEnum.ordinary.getTypeName());
         }
         return list;
     }
