@@ -19,9 +19,7 @@
 
     <select id="selectLast3DaysBrowseLogByUserId" resultType="com.buct.computer.model.UserBrowseLog">
         select <include refid="Base_Column_List"/> from user_browse_log
-        <where>
-            browse_time &gt;= now() - interval 3 day
-        </where>
+        where browse_time &gt;= now() - interval 3 day and user_id = #{userId}
         order by browse_time desc
     </select>
 
