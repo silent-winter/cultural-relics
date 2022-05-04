@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @Service
 public class AdminOperationLogServiceImpl extends ServiceImpl<AdminOperationLogMapper, AdminOperationLog> implements IAdminOperationLogService {
 
-    private final String dictionary = "/Users/bytedance/root/backup/";
+    private final String dictionary = "/root/backup/";
     private final File folder = new File(dictionary);
     private final Gson gson = new Gson();
 
@@ -68,6 +68,9 @@ public class AdminOperationLogServiceImpl extends ServiceImpl<AdminOperationLogM
 
     private void outputFile(String path, String result){
         try {
+            if (!folder.exists()) {
+                folder.mkdirs();
+            }
             OutputStream output = new FileOutputStream(path);
             output.write(result.getBytes());
             output.flush();
