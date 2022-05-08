@@ -94,7 +94,7 @@ public class AdminController {
             userInfo.setId(StpUtil.getLoginId(0));
         }
         if (userInfoService.updateById(userInfo)) {
-            saveAdminOperationLog("update", userInfo + " has been updated by admin(id=" + StpUtil.getLoginId(0) + ")");
+            saveAdminOperationLog("update", "user(id=" + userInfo.getId() + ") info has been updated by admin(id=" + StpUtil.getLoginId(0) + ")");
             return ApiResult.success("update user info successfully");
         }
         return ApiResult.fail("fail to update user info");
