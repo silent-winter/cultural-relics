@@ -52,8 +52,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
             });
             //SaRouter.match("/**", () -> SaRouter.stop());  // 为了方便测试可以暂时设置为全部放行
             SaRouter.match("/", "/error", "/csrf", "/swagger-resources/**", "/**/swagger-ui.html", "/webjars/**").check(SaRouter::stop);  // swagger放行路由
-            SaRouter.match("/user/register", SaRouter::stop);
-            SaRouter.match("/**", "/user/login", StpUtil::checkLogin);
+            SaRouter.match("/user/register", "/user/login", "/admin/login").check(SaRouter::stop);
+            SaRouter.match("/**", StpUtil::checkLogin);
             SaRouter.match("/admin/**", () -> StpUtil.checkRole(UserTypeEnum.admin.getTypeName()));
         }));
     }

@@ -3,6 +3,7 @@ package com.buct.computer.controller;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.buct.computer.common.assembler.UserInfoAssembler;
 import com.buct.computer.common.enums.UserTypeEnum;
 import com.buct.computer.model.AdminOperationLog;
 import com.buct.computer.model.CulturalRelicComment;
@@ -10,10 +11,12 @@ import com.buct.computer.model.CulturalRelicInfo;
 import com.buct.computer.model.UserInfo;
 import com.buct.computer.request.UserLoginDTO;
 import com.buct.computer.response.ApiResult;
+import com.buct.computer.response.vo.UserInfoDetailVO;
 import com.buct.computer.service.IAdminOperationLogService;
 import com.buct.computer.service.ICulturalRelicCommentService;
 import com.buct.computer.service.ICulturalRelicInfoService;
 import com.buct.computer.service.IUserInfoService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -64,6 +67,20 @@ public class AdminController {
         return ApiResult.success("logout successfully");
     }
 
+    @GetMapping("/info")
+    public ApiResult<UserInfoDetailVO> getUserInfo(@RequestParam(value = "userId", required = false) Integer userId) {
+        if (Objects.isNull(userId)) {
+            // userId为空，默认查询当前登录用户的信息
+            userId = StpUtil.getLoginId(0);
+        }
+        UserInfo userInfo = userInfoService.getById(userId);
+        if (userInfo == null) {
+            return ApiResult.fail(ApiResult.ENTITY_ABSENT, ApiResult.ENTITY_ABSENT_MSG);
+        }
+        UserInfoDetailVO userInfoDetailVO = UserInfoAssembler.MAPPER.userInfoToUserInfoDetailVO(userInfo);
+        return ApiResult.success(userInfoDetailVO);
+    }
+
     @GetMapping("/user/info")
     public ApiResult<List<UserInfo>> getAllUserInfo() {
         List<UserInfo> allUserInfo = userInfoService.list();
@@ -72,6 +89,10 @@ public class AdminController {
 
     @PatchMapping("/user/info")
     public ApiResult<String> updateUserInfo(@RequestBody UserInfo userInfo) {
+        if (Objects.isNull(userInfo.getId())) {
+            // userId为空，则默认当前登录用户的信息
+            userInfo.setId(StpUtil.getLoginId(0));
+        }
         if (userInfoService.updateById(userInfo)) {
             saveAdminOperationLog("update", userInfo + " has been updated by admin(id=" + StpUtil.getLoginId(0) + ")");
             return ApiResult.success("update user info successfully");
@@ -121,10 +142,19 @@ public class AdminController {
         return ApiResult.success("delete comment(id=" + ids + ") successfully");
     }
 
+    @AllArgsConstructor
+    class BackupFile {
+        private String name;
+        private String text;
+    }
     @GetMapping("/backup/files")
-    public ApiResult<Map<String, String>> getBackupFiles() {
+    public ApiResult<List<BackupFile>> getBackupFiles() {
         Map<String, String> backupMap = adminOperationLogService.getBackupFiles();
-        return ApiResult.success(backupMap);
+        List<BackupFile> backupFileList = new ArrayList<>();
+        for (Map.Entry<String, String> entry : backupMap.entrySet()) {
+            backupFileList.add(new BackupFile(entry.getKey(), entry.getValue()));
+        }
+        return ApiResult.success(backupFileList);
     }
 
     @GetMapping("/backup")
