@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.annotation.*;
 
 import java.util.Date;
 import java.io.Serializable;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.ImmutableSet;
 import lombok.*;
 
 /**
@@ -25,6 +28,11 @@ import lombok.*;
 public class CulturalRelicInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    @JsonIgnore
+    private static final Set<String> VALID_SORT_FIELDS = ImmutableSet.of(
+            "id", "name", "artist", "custom_class", "museum", "like_num"
+    );
 
     /**
      * 文物id
@@ -130,5 +138,10 @@ public class CulturalRelicInfo implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
+
+    @JsonIgnore
+    public static boolean isValidSortField(String field) {
+        return VALID_SORT_FIELDS.contains(field);
+    }
 
 }

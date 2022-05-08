@@ -42,7 +42,7 @@ public class CulturalRelicInfoController {
     @GetMapping("/page")
     @ApiOperation("条件查询，获取文物分页数据")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "isFuzzy", value = "是否使用模糊查询", required = true),
+            @ApiImplicitParam(name = "isFuzzy", value = "是否使用模糊查询", defaultValue = "false", required = true),
             @ApiImplicitParam(name = "keyword", value = "模糊匹配的搜索关键字"),
             @ApiImplicitParam(name = "medium", value = "高级搜索时填，文物材质", defaultValue = "bronze,copper,silver,Porcelain,Iron"),
             @ApiImplicitParam(name = "artist", value = "高级搜索时填，文物作者，可匹配多个，逗号分割", defaultValue = "unknown,Chinese"),
