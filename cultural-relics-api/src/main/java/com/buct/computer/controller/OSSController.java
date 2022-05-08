@@ -52,11 +52,8 @@ public class OSSController {
     public ApiResult<List<CulturalRelicInfo>> uploadAndSave(@RequestBody List<CulturalRelicInfoDTO> culturalRelicInfoVOList) {
         // 对象mapping
         List<CulturalRelicInfo> culturalRelicInfos = culturalRelicInfoVOList.stream()
-                .map(e -> {
-                    CulturalRelicInfo culturalRelicInfo = CulturalRelicAssembler.MAPPER.culturalRelicInfoDTOToCulturalRelicInfo(e);
-                    culturalRelicInfo.setLikeNum(0);
-                    return culturalRelicInfo;
-                }).collect(Collectors.toList());
+                .map(e -> CulturalRelicAssembler.MAPPER.culturalRelicInfoDTOToCulturalRelicInfo(e, 0))
+                .collect(Collectors.toList());
         try {
             for (CulturalRelicInfoDTO culturalRelicInfoDTO : culturalRelicInfoVOList) {
                 String imgName = culturalRelicInfoDTO.getImgName();

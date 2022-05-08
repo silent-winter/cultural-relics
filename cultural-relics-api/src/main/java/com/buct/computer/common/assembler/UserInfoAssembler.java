@@ -42,9 +42,8 @@ public interface UserInfoAssembler {
     @Mapping(target = "likeCulturalRelics", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "updateTime", ignore = true)
-    @Mapping(target = "status", ignore = true)
     @Mapping(target = "createTime", ignore = true)
     @Mapping(target = "collection", ignore = true)
-    UserInfo userRegisterDTOToUserInfo(UserRegisterDTO userRegisterDTO);
+    UserInfo userRegisterDTOToUserInfo(UserRegisterDTO userRegisterDTO, Integer status);
 
 }

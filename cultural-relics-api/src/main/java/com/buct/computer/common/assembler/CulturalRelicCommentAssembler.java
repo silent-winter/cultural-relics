@@ -19,19 +19,16 @@ public interface CulturalRelicCommentAssembler {
 
     CulturalRelicCommentAssembler MAPPER = Mappers.getMapper(CulturalRelicCommentAssembler.class);
 
+
     @Mapping(target = "childrenCommentList", ignore = true)
     @Mapping(target = "commentId", source = "id")
     @Mapping(source = "updateTime", target = "updateTime", dateFormat = "yyyy-MM-dd HH:mm:ss")
     CulturalRelicCommentVO CulturalRelicCommentToCulturalRelicCommentVO(CulturalRelicComment culturalRelicComment);
 
 
-    @Mapping(target = "publishUserName", ignore = true)
-    @Mapping(target = "publishUserId", ignore = true)
     @Mapping(target = "updateTime", ignore = true)
-    @Mapping(target = "status", ignore = true)
-    @Mapping(target = "likeNum", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createTime", ignore = true)
-    CulturalRelicComment CulturalRelicCommentDTOToCulturalRelicComment(CulturalRelicCommentDTO culturalRelicCommentDTO);
+    CulturalRelicComment CulturalRelicCommentDTOToCulturalRelicComment(CulturalRelicCommentDTO culturalRelicCommentDTO, Integer likeNum, Integer status, Integer publishUserId, String publishUserName);
 
 }

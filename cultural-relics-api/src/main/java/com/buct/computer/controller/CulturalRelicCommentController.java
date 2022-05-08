@@ -50,14 +50,8 @@ public class CulturalRelicCommentController {
 
     @GetMapping("/page")
     @ApiOperation("根据文物id查询所有评论得分页数据")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "culturalRelicId", value = "文物id", defaultValue = "1", required = true),
-            @ApiImplicitParam(name = "page", value = "当前页码", defaultValue = "1"),
-            @ApiImplicitParam(name = "size", value = "每页记录数", defaultValue = "10")
-    })
-    public ApiResult<List<CulturalRelicCommentVO>> getPageComments(@RequestParam("culturalRelicId") Long culturalRelicId,
-                                     @RequestParam(value = "page", required = false) Integer page,
-                                     @RequestParam(value = "size", required = false) Integer size) {
+    @ApiImplicitParams({@ApiImplicitParam(name = "culturalRelicId", value = "文物id", defaultValue = "1", required = true), @ApiImplicitParam(name = "page", value = "当前页码", defaultValue = "1"), @ApiImplicitParam(name = "size", value = "每页记录数", defaultValue = "10")})
+    public ApiResult<List<CulturalRelicCommentVO>> getPageComments(@RequestParam("culturalRelicId") Long culturalRelicId, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size) {
         CulturalRelicInfo culturalRelicInfo = culturalRelicInfoService.getById(culturalRelicId);
         if (culturalRelicInfo == null) {
             return ApiResult.fail(ApiResult.ENTITY_ABSENT, ApiResult.ENTITY_ABSENT_MSG);
@@ -87,11 +81,7 @@ public class CulturalRelicCommentController {
     public ApiResult<CulturalRelicComment> publishComment(@RequestBody CulturalRelicCommentDTO culturalRelicCommentDTO) {
         UserInfo loginUser = userInfoService.getLoginUser();
         CulturalRelicComment comment = CulturalRelicCommentAssembler.MAPPER
-                .CulturalRelicCommentDTOToCulturalRelicComment(culturalRelicCommentDTO);
-        comment.setLikeNum(0);
-        comment.setStatus(1);
-        comment.setPublishUserId(loginUser.getId());
-        comment.setPublishUserName(loginUser.getUserName());
+                .CulturalRelicCommentDTOToCulturalRelicComment(culturalRelicCommentDTO, 0, 1, loginUser.getId(), loginUser.getUserName());
         culturalRelicCommentService.save(comment);
         return ApiResult.success(comment);
     }

@@ -80,8 +80,7 @@ public class UserInfoController {
         if (StringUtils.isBlank(userRegisterDTO.getType())) {
             userRegisterDTO.setType(UserTypeEnum.ordinary.getTypeName());
         }
-        UserInfo userInfo = UserInfoAssembler.MAPPER.userRegisterDTOToUserInfo(userRegisterDTO);
-        userInfo.setStatus(1);
+        UserInfo userInfo = UserInfoAssembler.MAPPER.userRegisterDTOToUserInfo(userRegisterDTO, 1);
         userInfoService.save(userInfo);
         return ApiResult.success("register successfully");
     }
