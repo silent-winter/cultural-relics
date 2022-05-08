@@ -114,11 +114,17 @@ public class CulturalRelicInfoServiceImpl extends ServiceImpl<CulturalRelicInfoM
         String sort = queryRequestDTO.getSort();
         if (StringUtils.isNotBlank(sort)) {
             String[] split = sort.split(":");
-            if (split.length != 2 || CulturalRelicInfo.isValidSortField(split[0])) {
-                throw new RuntimeException("排序条件拼接非法");
-            }
+            checkSortCondition(split);
             queryWrapper.orderBy(true, StringUtils.equalsIgnoreCase("asc", split[1]), split[0]);
         }
         return queryWrapper;
     }
+
+    private void checkSortCondition(String[] sort) {
+        if (sort.length != 2 || !CulturalRelicInfo.isValidSortField(sort[0])
+                || !StringUtils.equalsAnyIgnoreCase(sort[1], "asc", "desc")) {
+            throw new RuntimeException("排序条件拼接非法");
+        }
+    }
+
 }

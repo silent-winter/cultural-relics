@@ -4,6 +4,7 @@ import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.exception.NotRoleException;
 import com.buct.computer.response.ApiResult;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -45,7 +46,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ApiResult<String> handleException(Exception e){
         log.warn("handleException detected!", e);
-        return ApiResult.fail(ApiResult.ERROR_SYSTEM, ApiResult.ERROR_SYSTEM_MSG);
+        return ApiResult.fail(ApiResult.ERROR_SYSTEM, StringUtils.isNotBlank(e.getMessage()) ? e.getMessage() : ApiResult.ERROR_SYSTEM_MSG);
     }
 
 }
