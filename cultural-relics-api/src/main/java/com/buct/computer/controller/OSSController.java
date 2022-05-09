@@ -22,7 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -50,6 +52,7 @@ public class OSSController {
     @PostMapping("/uploadAndSave")
     @Transactional
     public ApiResult<List<CulturalRelicInfo>> uploadAndSave(@RequestBody List<CulturalRelicInfoDTO> culturalRelicInfoVOList) {
+        Set<String> imgNameSet = new HashSet<>(128);
         // 对象mapping
         List<CulturalRelicInfo> culturalRelicInfos = culturalRelicInfoVOList.stream()
                 .map(e -> CulturalRelicAssembler.MAPPER.culturalRelicInfoDTOToCulturalRelicInfo(e, 0))
@@ -57,13 +60,17 @@ public class OSSController {
         try {
             for (CulturalRelicInfoDTO culturalRelicInfoDTO : culturalRelicInfoVOList) {
                 String imgName = culturalRelicInfoDTO.getImgName();
-                InputStream inputStream = new FileInputStream("E:\\24\\24\\img_24\\" + imgName);
+                if (imgNameSet.contains(imgName)) {
+                    continue;
+                }
+                imgNameSet.add(imgName);
+                InputStream inputStream = new FileInputStream("E:\\15\\15\\img_15\\" + imgName);
                 // 设置header
                 ObjectMetadata objectMetadata = new ObjectMetadata();
                 objectMetadata.setContentType("image/jpg");
                 objectMetadata.setContentDisposition("inline");
                 // 创建PutObject请求。
-                ossClient.putObject(bucketName, "pic24/" + imgName, inputStream, objectMetadata);
+                ossClient.putObject(bucketName, "pic15/" + imgName, inputStream, objectMetadata);
             }
             culturalRelicInfoService.saveBatch(culturalRelicInfos);
             return ApiResult.success(culturalRelicInfos);

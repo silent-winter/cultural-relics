@@ -128,27 +128,7 @@ public class CulturalRelicInfoControllerTest {
                     "Architectural Elements",
                     "Jades, jewelry & personal accessories")) {
                 e.setCustomClass("ArtWare");
-            } else if (StringUtils.equalsAnyIgnoreCase(classification, "Tools and Equipment",
-                    "Containers - Other",
-                    "Flatware",
-                    "Arms and Armor",
-                    "Jades",
-                    "Arms & armor, jades",
-                    "Musical Instruments",
-                    "Metalwork, tools & equipment",
-                    "Jades, stone & mineral",
-                    "Miniatures",
-                    "Containers, jades",
-                    "Ritual Objects",
-                    "Lighting Devices",
-                    "Stained Glass",
-                    "Timepieces",
-                    "Toys and Games",
-                    "Metalwork",
-                    "Metalwork, musical instruments",
-                    "Arms & armor, metalwork",
-                    "Jewelry & personal accessories, metalwork",
-                    "Ceramics, jewelry & personal accessories")) {
+            } else {
                 e.setCustomClass("Others");
             }
             return e;
