@@ -9,14 +9,19 @@ import com.buct.computer.model.AdminOperationLog;
 import com.buct.computer.model.CulturalRelicComment;
 import com.buct.computer.model.CulturalRelicInfo;
 import com.buct.computer.model.UserInfo;
+import com.buct.computer.request.QueryRequestDTO;
 import com.buct.computer.request.UserLoginDTO;
 import com.buct.computer.response.ApiResult;
+import com.buct.computer.response.vo.PageResultVO;
 import com.buct.computer.response.vo.UserInfoDetailVO;
 import com.buct.computer.service.IAdminOperationLogService;
 import com.buct.computer.service.ICulturalRelicCommentService;
 import com.buct.computer.service.ICulturalRelicInfoService;
 import com.buct.computer.service.IUserInfoService;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import lombok.Data;
+import org.apache.http.util.Asserts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -100,10 +105,23 @@ public class AdminController {
         return ApiResult.fail("fail to update user info");
     }
 
-    @GetMapping("/relic")
-    public ApiResult<List<CulturalRelicInfo>> getRelicList() {
-        List<CulturalRelicInfo> culturalRelicInfoList = culturalRelicInfoService.list();
-        return ApiResult.success(culturalRelicInfoList);
+    //@GetMapping("/relic")
+    //public ApiResult<List<CulturalRelicInfo>> getRelicList() {
+    //    List<CulturalRelicInfo> culturalRelicInfoList = culturalRelicInfoService.list();
+    //    return ApiResult.success(culturalRelicInfoList);
+    //}
+
+    @GetMapping("/relic/page")
+    public ApiResult<PageResultVO<CulturalRelicInfo>> getPage(QueryRequestDTO queryRequestDTO) {
+        Asserts.notNull(queryRequestDTO.getPage(), "当前页不能为空");
+        Asserts.check(queryRequestDTO.getPage() > 0, "页号必须大于0");
+        Asserts.notNull(queryRequestDTO.getSize(), "每页大小不能为空");
+        Asserts.check(queryRequestDTO.getSize() > 0, "页大小必须大于0");
+        if (queryRequestDTO.getIsFuzzy() == null) {
+            queryRequestDTO.setIsFuzzy(false);
+        }
+        PageResultVO<CulturalRelicInfo> pageResultVO = culturalRelicInfoService.queryByCondition(queryRequestDTO);
+        return ApiResult.success(pageResultVO);
     }
 
     @PostMapping("/relic")
@@ -142,6 +160,7 @@ public class AdminController {
         return ApiResult.success("delete comment(id=" + ids + ") successfully");
     }
 
+    @Data
     @AllArgsConstructor
     class BackupFile {
         private String name;
