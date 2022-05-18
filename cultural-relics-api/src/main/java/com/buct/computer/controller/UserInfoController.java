@@ -3,6 +3,7 @@ package com.buct.computer.controller;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.buct.computer.common.assembler.UserInfoAssembler;
 import com.buct.computer.common.enums.UserTypeEnum;
@@ -22,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
+import java.util.Optional;
 
 
 /**
@@ -89,11 +91,12 @@ public class UserInfoController {
     @ApiOperation("登录")
     public ApiResult<SaTokenInfo> login(@RequestBody UserLoginDTO userLoginDTO) {
         checkUserParam(userLoginDTO.getUserName(), userLoginDTO.getPassword());
-        UserInfo savedAccount = userInfoService.getOne(new QueryWrapper<UserInfo>()
-                .eq("user_name", userLoginDTO.getUserName())
-                .eq("password", userLoginDTO.getPassword()));
-        if (savedAccount == null) {
-            return ApiResult.fail("the user hasn't registered");
+        Optional<UserInfo> userInfoOptional = Optional.of(userInfoService.getOne(
+                new LambdaQueryWrapper<UserInfo>().eq(UserInfo::getUserName, userLoginDTO.getUserName())
+        ));
+        UserInfo savedAccount = userInfoOptional.orElseThrow(() -> new RuntimeException("the user hasn't registered"));
+        if (!StringUtils.equals(savedAccount.getPassword(), userLoginDTO.getPassword())) {
+            return ApiResult.fail("error password");
         }
         if (savedAccount.getStatus() == 0) {
             return ApiResult.fail("the user's permission has been closed");
