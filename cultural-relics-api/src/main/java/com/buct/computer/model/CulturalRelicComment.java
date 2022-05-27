@@ -4,9 +4,12 @@ import com.baomidou.mybatisplus.annotation.*;
 
 import java.util.Date;
 import java.io.Serializable;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.google.common.collect.ImmutableSet;
 import lombok.*;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * <p>
@@ -25,6 +28,10 @@ import lombok.*;
 public class CulturalRelicComment implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    public static final Set<String> INVALID_TOKEN = ImmutableSet.of(
+            "操", "fuck", "草泥马", "妈逼"
+    );
 
     /**
      * 评论id
@@ -87,5 +94,15 @@ public class CulturalRelicComment implements Serializable {
     @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
+
+
+    public static boolean isValidComment(String content) {
+        for (String token : INVALID_TOKEN) {
+            if (StringUtils.contains(content, token)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
 }

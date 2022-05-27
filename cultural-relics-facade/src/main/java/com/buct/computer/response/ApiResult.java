@@ -33,13 +33,15 @@ public class ApiResult<T> {
     public static final String NO_AUTH = "Q00403";
     // 数据库实例不存在
     public static final String ENTITY_ABSENT = "Q00404";
-
+    // 敏感评论
+    public static final String SENSITIVE_COMMENT = "Q00999";
 
     public static final String SUCCESS_MSG = "success";
     public static final String ERROR_SYSTEM_MSG = "未知异常，系统错误";
     public static final String ENTITY_ABSENT_MSG = "数据库实例不存在";
     public static final String ERROR_PARAM_MSG = "输入参数错误";
     public static final String NO_AUTH_MSG = "输入参数错误";
+    public static final String SENSITIVE_COMMENT_MSG = "评论带有敏感字眼";
 
 
     @ApiModelProperty("是否成功")

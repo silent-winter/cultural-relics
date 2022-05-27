@@ -84,6 +84,9 @@ public class CulturalRelicCommentController {
     @ApiOperation("发表评论")
     public ApiResult<CulturalRelicComment> publishComment(@RequestBody CulturalRelicCommentDTO culturalRelicCommentDTO) {
         UserInfo loginUser = userInfoService.getLoginUser();
+        if (!CulturalRelicComment.isValidComment(culturalRelicCommentDTO.getContent())) {
+            return ApiResult.fail(ApiResult.SENSITIVE_COMMENT, ApiResult.SENSITIVE_COMMENT_MSG);
+        }
         CulturalRelicComment comment = CulturalRelicCommentAssembler.MAPPER
                 .CulturalRelicCommentDTOToCulturalRelicComment(culturalRelicCommentDTO, 0, 1, loginUser.getId(), loginUser.getUserName());
         culturalRelicCommentService.save(comment);
